@@ -1,0 +1,18 @@
+[project]
+name = "platotk"
+version = "0.1.0-DEV"
+authors = [
+  { name="Microsoft"},
+]
+description = "A package to build and train RL solutions"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Azure/plato"
+"Bug Tracker" = "https://github.com/Azure/plato"
