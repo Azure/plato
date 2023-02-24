@@ -9,7 +9,7 @@ from ray_on_aml.core import Ray_On_AML
 import ray.tune as tune
 from ray.rllib import train
 
-from utils import MyCallback
+from utils.callbacks import MyCallback
 
 
 # IMPORT OUR CUSTOM ENVIRONMENT
