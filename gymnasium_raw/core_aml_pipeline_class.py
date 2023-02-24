@@ -46,7 +46,6 @@ class AML_Pipeline:
 
         # RUN EXPERIMENT.
         if self.experiment_run:
-            self._experiment_setup()
             self._experiment_run()
     
     def _workspace_setup(self,
@@ -172,17 +171,6 @@ class AML_Pipeline:
         return self.ray_gpu_env
 
 
-    def _experiment_setup(self):
-
-        print("\n##### EXPERIMENT SETUP #####")
-
-        # Create an experiment.
-        experiment = Experiment(workspace=self.ws, name=self.experiment_name)
-
-        self.experiment = experiment
-        return self.experiment
-
-
     def _experiment_run(self):
 
         print("\n##### RUN EXPERIMENT #####")
@@ -195,7 +183,9 @@ class AML_Pipeline:
         self.experiment_name = self.experiment_name #'rllib-multi-node'
 
         experiment = Experiment(workspace=self.ws, name=self.experiment_name)
+        self.experiment = experiment
         ray_environment = Environment.get(workspace=self.ws, name=self.ray_environment_name)
+        self.ray_environment = ray_environment
 
         aml_run_config_ml = RunConfiguration(communicator='OpenMpi')
         aml_run_config_ml.target = self.compute_target
@@ -214,9 +204,9 @@ class AML_Pipeline:
                                 command=command,
                                 run_config = aml_run_config_ml
                                 )
-        training_run = experiment.submit(config)
+        training_run = self.experiment.submit(config)
 
-        training_run.wait_for_completion(show_output=True)
+        #training_run.wait_for_completion(show_output=True)
     
 
 
