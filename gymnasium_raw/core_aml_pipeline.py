@@ -9,12 +9,12 @@ import os
 ###############################################################################################################
 ####################### PARAM SETUP ###########################################################################
 ###############################################################################################################
-compute_name = 'compute-gym-gpu'
+compute_name = 'gym-gpu-compute'
 # Base image for the training environment (no files pushed).
-ray_environment_name = 'cstr-gpu'
+ray_environment_name = 'gym-gpu-image'
 ray_environment_recreate = False
 # Experiment to run (sim files pushed).
-experiment_name = 'rllib-gym-multi-node'
+experiment_name = 'gym-gpu-rllib-multi-node'
 experiment_run = True
 max_experiment_time = 1800 # seconds
 
