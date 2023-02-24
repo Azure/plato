@@ -20,8 +20,11 @@ max_experiment_time = 1800 # seconds
 
 
 ###############################################################################################################
-####################### ACCESS WORKSPACE ######################################################################
+####################### WORKSPACE ACCESS ######################################################################
 ###############################################################################################################
+
+print("\n##### WORKSPACE ACCESS SETUP #####")
+
 # IDENTIFY CONFIG FOLDER WITH ACCESS TO AZURE ML RESOURCES.
 # If not: (1) get the workspace data, (2) create folder, (3) dump data.
 if not os.path.exists(".azureml") or not os.path.exists(".azureml/azureml-config.json"):
@@ -86,6 +89,8 @@ print("We were able to access the following resources:", ws.name, ws.location, w
 ###############################################################################################################
 from azureml.core.experiment import Experiment
 
+print("\n##### EXPERIMENT SETUP #####")
+
 # Experiment name
 experiment_name = experiment_name #'rllib-cstr-multi-node'
 exp = Experiment(workspace=ws, name=experiment_name)
@@ -95,6 +100,8 @@ exp = Experiment(workspace=ws, name=experiment_name)
 ####################### COMPUTE TARGET ########################################################################
 ###############################################################################################################
 from azureml.core.compute import AmlCompute, ComputeTarget
+
+print("\n##### COMPUTE TARGET SETUP #####")
 
 # Choose a name for the Ray cluster
 compute_name = compute_name #'compute-gpu'
@@ -107,13 +114,14 @@ vm_size = 'STANDARD_NC6'
 if compute_name in ws.compute_targets:
     compute_target = ws.compute_targets[compute_name]
     if compute_target and type(compute_target) is AmlCompute:
+        print(f'Found compute target with name {compute_name}.')
         if compute_target.provisioning_state == 'Succeeded':
-            print('found compute target. just use it', compute_name)
+             print(f'Compute target is ready to use.')
         else: 
             raise Exception(
-                'found compute target but it is in state', compute_target.provisioning_state)
+                f'Compute target cannot be used. Found it in state: {compute_target.provisioning_state}.')
 else:
-    print('creating a new compute target...')
+    print(f'Did not find compute target with name: {compute_name}. Creating a new compute target...')
     provisioning_config = AmlCompute.provisioning_configuration(
         vm_size=vm_size,
         min_nodes=compute_min_nodes, 
@@ -137,15 +145,20 @@ else:
 import os
 from azureml.core import Environment
 
+print("\n##### ENVIRONMENT SETUP #####")
+
 # Check if environment exists
 if not ray_environment_recreate:
     try:
         ray_gpu_env = Environment.get(workspace=ws, name=ray_environment_name)
+        print(f"Found environment with name {ray_environment_name}.")
     except:
         ray_environment_recreate = True
+        print(f"Did not find environment with name {ray_environment_name}. Creating a new environment...")
 
 # Create environment if it doesn't exist or whenever it is requested
 if ray_environment_recreate:
+    print(f"Updating environment with name {ray_environment_name}...")
     ray_environment_name = ray_environment_name #'cstr-gpu'
     ray_environment_dockerfile_path = os.path.join(os.getcwd(), 'docker', 'Dockerfile-gpu')
 
@@ -163,7 +176,10 @@ if ray_environment_recreate:
 ###############################################################################################################
 from azureml.core import RunConfiguration, ScriptRunConfig
 
+print("\n##### RUN EXPERIMENT #####")
+
 if experiment_run:
+    print(f"Running experiment with name {experiment_name}...")
     experiment_name = experiment_name #'rllib-multi-node'
 
     experiment = Experiment(workspace=ws, name=experiment_name)
@@ -187,7 +203,7 @@ if experiment_run:
     ]
 
     config = ScriptRunConfig(source_directory='./files',
-                        command=command,
-                        run_config = aml_run_config_ml
-                    )
+                             command=command,
+                             run_config = aml_run_config_ml
+                             )
     training_run = experiment.submit(config)
