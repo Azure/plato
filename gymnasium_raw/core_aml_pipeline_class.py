@@ -40,7 +40,55 @@ class AML_Pipeline:
         # ENVIRONMENT SETUP.
         self._environment_setup()
 
-    
+
+    def experiment_run(self,
+                       experiment_name=None,
+                       max_experiment_time=None,
+                       training_algorithm = "IMPALA",
+                       rl_environment = "custom_gym_env",
+                       script_name='custom_rllib_run.py'):
+
+        print("\n##### RUN EXPERIMENT #####")
+
+        if experiment_name is not None:
+            self.experiment_name = experiment_name
+        if max_experiment_time is not None:
+            self.max_experiment_time = max_experiment_time
+
+        print(f"Running experiment with name {self.experiment_name}, with a max time limit of {max_experiment_time} secs...")
+        self.experiment_name = self.experiment_name #'rllib-multi-node'
+
+        experiment = Experiment(workspace=self.ws, name=self.experiment_name)
+        self.experiment = experiment
+        ray_environment = Environment.get(workspace=self.ws, name=self.ray_environment_name)
+        self.ray_environment = ray_environment
+
+        aml_run_config_ml = RunConfiguration(communicator='OpenMpi')
+        aml_run_config_ml.target = self.compute_target
+        aml_run_config_ml.node_count = 2
+        aml_run_config_ml.environment = ray_environment
+
+        command=[
+            'python', script_name,
+            '--run', training_algorithm,
+            '--env', rl_environment,
+            '--config', '\'{"num_gpus": 1, "num_workers": 11}\'',
+            '--stop', '\'{"episode_reward_mean": 100, "time_total_s": ' + str(max_experiment_time) + '}\''
+        ]
+
+        config = ScriptRunConfig(source_directory='./files',
+                                command=command,
+                                run_config = aml_run_config_ml
+                                )
+        training_run = self.experiment.submit(config)
+
+        return training_run
+
+        #training_run.wait_for_completion(show_output=True)
+
+
+
+    ### PRIVATE SETUP METHODS ###
     def _workspace_setup(self,
                          config_folder=".azureml",
                          aml_config_file="azureml-config.json",
@@ -162,52 +210,6 @@ class AML_Pipeline:
     
         self.ray_gpu_env = ray_gpu_env
         return self.ray_gpu_env
-
-
-    def experiment_run(self,
-                       experiment_name=None,
-                       max_experiment_time=None,
-                       training_algorithm = "IMPALA",
-                       rl_environment = "custom_gym_env",
-                       script_name='custom_rllib_run.py'):
-
-        print("\n##### RUN EXPERIMENT #####")
-
-        if experiment_name is not None:
-            self.experiment_name = experiment_name
-        if max_experiment_time is not None:
-            self.max_experiment_time = max_experiment_time
-
-        print(f"Running experiment with name {self.experiment_name}, with a max time limit of {max_experiment_time} secs...")
-        self.experiment_name = self.experiment_name #'rllib-multi-node'
-
-        experiment = Experiment(workspace=self.ws, name=self.experiment_name)
-        self.experiment = experiment
-        ray_environment = Environment.get(workspace=self.ws, name=self.ray_environment_name)
-        self.ray_environment = ray_environment
-
-        aml_run_config_ml = RunConfiguration(communicator='OpenMpi')
-        aml_run_config_ml.target = self.compute_target
-        aml_run_config_ml.node_count = 2
-        aml_run_config_ml.environment = ray_environment
-
-        command=[
-            'python', script_name,
-            '--run', training_algorithm,
-            '--env', rl_environment,
-            '--config', '\'{"num_gpus": 1, "num_workers": 11}\'',
-            '--stop', '\'{"episode_reward_mean": 100, "time_total_s": ' + str(max_experiment_time) + '}\''
-        ]
-
-        config = ScriptRunConfig(source_directory='./files',
-                                command=command,
-                                run_config = aml_run_config_ml
-                                )
-        training_run = self.experiment.submit(config)
-
-        return training_run
-
-        #training_run.wait_for_completion(show_output=True)
     
 
 
