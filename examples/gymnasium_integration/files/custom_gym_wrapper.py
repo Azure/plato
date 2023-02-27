@@ -17,64 +17,34 @@ class Gym_Wrapper(gym.Env):
         # dimensions of the grid
         self.XX = kwargs.get('XX',3)
 
-        # the observation will be 4: Tr, Cr, Cref, Tc
-        self.observation_space = gym.spaces.Box(low=-100.0, high=600.0, shape=(4,), dtype=np.float32)
-        assert np.array([0,0,0,0], np.float32) in self.observation_space
+        # get specs for states and actions from the simulator
+        self.state_dim, self.action_dim = self.sim.get_gym_specs()
+
+        # configure states
+        self.observation_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(self.state_dim,), dtype=np.float32)
+        assert np.array([0]*self.state_dim, np.float32) in self.observation_space
         #self.observation_space = MultiDiscrete([self.width, self.height])
 
-        # there is 1 possible actions: Tc
-        self.action_space = gym.spaces.Box(low=-10.0, high=10.0, shape=(1,), dtype=np.float32)
+        # configure actions
+        self.action_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(self.action_dim,), dtype=np.float32)
 
 
     def step(self, action):
         ''' apply the supplied action '''
 
         # take the action
-        action_dict = dict([("Tc_adjust", action[0])])
-        state_dict = self.sim.step(action_dict)
+        self.sim.step(action)
 
         # convert the state to a Gym state
-        state = self.get_gym_state(state_dict)
-
-        # set the 'terminated' flag if we've reached thermal runaway
-        terminated = self.sim.termination()
-        truncated = self.sim.truncation()
+        state = self.sim.sim_state_to_gym()
 
         # get -1 reward for each step
         # - except at the terminal state which has zero reward
-        reward = self.compute_reward(state_dict)
-        if terminated:
-            reward += -10
-        elif truncated:
-            reward += 0
+        # - set the 'terminated' flag if we've reached thermal runaway
+        reward, terminated, truncated = self.sim.compute_reward_term_and_trun()
 
         info = {}
         return state, reward, terminated, truncated, info
-    
-
-    def get_gym_state(self, state_dict):
-        ''' convert the simulator state to a Gym state '''
-
-        # convert the state to a Gym state
-        state = [state_dict["Tr"],
-                state_dict["Cr"],
-                state_dict["Cref"],
-                state_dict["Tc"]]
-        state = np.array(state, np.float32)
-
-        return state
-    
-
-    def compute_reward(self, state_dict):
-        ''' compute the reward for the supplied state '''
-        
-        # compute the concentration error
-        cr_error = abs(state_dict["Cr"]-state_dict["Cref"])
-
-        # get the reward from the simulator
-        reward = -cr_error
-
-        return reward
 
 
     def reset(self, seed=None, options=None):
@@ -83,7 +53,7 @@ class Gym_Wrapper(gym.Env):
         config = {}
         state_dict = self.sim.reset(config)
         # convert the state to a Gym state
-        state = self.get_gym_state(state_dict)
+        state = self.sim.sim_state_to_gym()
 
         info = {}
         return state,info
