@@ -37,9 +37,6 @@ class SimulatorModel:
 
     def reset(self, config) -> Dict[str, Any]:
         """ Reset any state from the previous episode and get ready to start a new episode. """
-
-        # Adjust simulation based on control_mode.
-        self.select_control_mode(config)
         
         # Start simulation with selected config.
         self.sim.reset(config=config)
@@ -70,12 +67,8 @@ class SimulatorModel:
     def select_control_mode(self, config):
 
         # If no control type is given, default to 'direct_control'.
-        if "control_mode" not in config.keys():
-            config = dict([("control_mode", "direct_control")])
+        config = dict([("control_mode", "direct_control")])
 
-        # Avoid doing nothing if the control mode hasn't changed.
-        if config["control_mode"] == self.control_mode:
-            return
 
         # initialize sim
         if config["control_mode"] == "direct_control":
@@ -83,17 +76,3 @@ class SimulatorModel:
             self.sim = CSTRSimulation(render = self.render,
                                       log_data = self.log_data,
                                       debug = self.debug)
-        
-        elif config["control_mode"] == "linear_mpc":
-            self.control_mode = "linear_mpc"
-            self.sim = linear_mpc(render = self.render,
-                                  log_data = self.log_data,
-                                  debug = self.debug)
-        
-        elif config["control_mode"] == "non_linear_mpc":
-            self.control_mode = "non_linear_mpc"
-            self.sim = non_lin_mpc(render = self.render,
-                                   log_data = self.log_data,
-                                   debug = self.debug)
-
-        return
