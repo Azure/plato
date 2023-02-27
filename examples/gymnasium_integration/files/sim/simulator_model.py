@@ -1,6 +1,4 @@
 from sim.cstr_sim import CSTRSimulation
-from sim.control_linear_mpc import linear_mpc
-from sim.control_nonlin_mpc import non_lin_mpc
 from typing import NamedTuple, List, Dict, Any, Union
 import numpy as np
 
