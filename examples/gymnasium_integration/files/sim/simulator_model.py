@@ -43,8 +43,8 @@ class SimulatorModel:
         return self.sim.get_state()
     
 
-    def compute_reward_term_and_trun(self) -> List[float, bool, bool]:
-        """ Return the current reward of the simulator. """
+    def compute_reward_term_and_trun(self):
+        """ Return the current reward of the simulator. TODO: Revisit output type """
         state_dict = self.sim.get_state()
 
         # compute the concentration error
