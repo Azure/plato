@@ -65,15 +65,6 @@ class CSTRSimulation():
     def reset(
         self,
         config: Dict[str, Any] = {},
-
-        # Non-applicable initialization parameters during episode restart
-        ΔTc: float = 0,
-        Ca: float = 0,
-        T: float = 0,
-        Tc: float = 0,
-        Cref: float = 0,
-        Tref: float = 0,
-        cnt: float = 0
     ):
         """
         Initialize a new episode of the simulator with configuration parameters.
