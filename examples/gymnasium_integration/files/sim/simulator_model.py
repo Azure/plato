@@ -112,7 +112,7 @@ class SimulatorModel:
         """ Apply the specified action and perform one simulation step. """
 
         # Apply action to sim.
-        action_dict = self.sim.gym_action_to_sim(action=action)
+        action_dict = self._gym_action_to_sim(action=action)
         self.sim.step(action=action_dict)
 
         # If 'sim_halted' is set to True, that indicates that the simulator is unable to continue and
