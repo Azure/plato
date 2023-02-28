@@ -64,7 +64,7 @@ class SimulatorModel:
 
         # get the reward from the simulator
         gamma = 1
-        reward = -np.exp(-cr_error * gamma)
+        reward = np.exp(-cr_error * gamma)
 
         # adjust based on termination and truncation
         terminated = self._termination()
