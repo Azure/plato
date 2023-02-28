@@ -42,8 +42,8 @@ class AML_Pipeline:
 
 
     def experiment_run(self,
-                       experiment_name=None,
-                       max_experiment_time=None,
+                       experiment_name = None,
+                       max_experiment_time = None,
                        training_algorithm = "IMPALA",
                        rl_environment = "custom_gym_env",
                        script_name='custom_rllib_run.py'):
@@ -55,7 +55,7 @@ class AML_Pipeline:
         if max_experiment_time is not None:
             self.max_experiment_time = max_experiment_time
 
-        print(f"Running experiment with name {self.experiment_name}, with a max time limit of {max_experiment_time} secs...")
+        print(f"Running experiment with name {self.experiment_name}, with a max time limit of {self.max_experiment_time} secs...")
         self.experiment_name = self.experiment_name #'rllib-multi-node'
 
         experiment = Experiment(workspace=self.ws, name=self.experiment_name)
@@ -73,7 +73,7 @@ class AML_Pipeline:
             '--run', training_algorithm,
             '--env', rl_environment,
             '--config', '\'{"num_gpus": 1, "num_workers": 11}\'',
-            '--stop', '\'{"episode_reward_mean": 100, "time_total_s": ' + str(max_experiment_time) + '}\''
+            '--stop', '\'{"episode_reward_mean": 100, "time_total_s": ' + str(self.max_experiment_time) + '}\''
         ]
 
         config = ScriptRunConfig(source_directory='./files',
