@@ -63,7 +63,8 @@ class SimulatorModel:
         cr_error = abs(state_dict["Cr"] - state_dict["Cref"])
 
         # get the reward from the simulator
-        reward = -cr_error
+        gamma = 1
+        reward = -np.exp(-cr_error * gamma)
 
         # adjust based on termination and truncation
         terminated = self._termination()
