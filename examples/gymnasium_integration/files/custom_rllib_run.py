@@ -14,6 +14,11 @@ from utils.callbacks import MyCallback
 
 # IMPORT OUR CUSTOM ENVIRONMENT
 from custom_gym_wrapper import Gym_Wrapper
+# TODO: Review parsing parameters to the sim through the wrapper.
+# azaidi: Do all the scenario parameters go into the options arg? And should that be of type Dict?
+#         We shall consider validating the config before it is passed
+#         i.e., obj is dataclass, or a Dict[str, type] which specifies the type of each scenario parameter)?
+#         It should help prevent errors when users provide invalid scenario parameter values during domain randomization.
 env = Gym_Wrapper
 tune.register_env('custom_gym_env', lambda config: env(config))
 #tune.register_env('custom_gym_env', lambda: config, env(config))
