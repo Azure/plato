@@ -60,6 +60,9 @@ class Gym_Wrapper(gym.Env):
 
 
     def render(self, action=0, reward=0 ):
+        # TODO: implement this
+        # azaidi: I wonder if we can use gymnasium's visualization wrappers or utils to
+        #         render episodes that we could serve or save to aml dashboard or mlflow.
         states=[]
         print(f"(action: {action}): (states: {states}) reward = {reward}")
 
