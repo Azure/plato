@@ -43,6 +43,18 @@ class SimulatorModel:
         return self.sim.get_state()
     
 
+    def step(self, action) -> Dict[str, Any]:
+        """ Apply the specified action and perform one simulation step. """
+
+        # Apply action to sim.
+        action_dict = self._gym_action_to_sim(action=action)
+        self.sim.step(action=action_dict)
+
+        # If 'sim_halted' is set to True, that indicates that the simulator is unable to continue and
+        # the episode will be discarded. This simulator sets it to False because it can always continue.
+        return self.sim.get_state()
+    
+
     def compute_reward_term_and_trun(self):
         """ Return the current reward of the simulator. TODO: Revisit output type """
         state_dict = self.sim.get_state()
@@ -106,18 +118,6 @@ class SimulatorModel:
     def _truncation(self) -> bool:
         """ Return True if the episode has reached a truncation condition. """
         return self.sim.truncation()
-    
-
-    def step(self, action) -> Dict[str, Any]:
-        """ Apply the specified action and perform one simulation step. """
-
-        # Apply action to sim.
-        action_dict = self._gym_action_to_sim(action=action)
-        self.sim.step(action=action_dict)
-
-        # If 'sim_halted' is set to True, that indicates that the simulator is unable to continue and
-        # the episode will be discarded. This simulator sets it to False because it can always continue.
-        return self.sim.get_state()
 
 
 
