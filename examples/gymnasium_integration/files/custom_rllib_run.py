@@ -55,6 +55,7 @@ if __name__ == "__main__":
             run_or_experiment=args.run,
             config={
                 "env": args.env,  #"WrappedCustomEnv-v0"
+                "env_config": {"reset_config": {"noise_percentage": 10}},
                 "num_gpus": args.config["num_gpus"],
                 "num_workers": args.config["num_workers"],
                 #"callbacks": {"on_train_result": callbacks.on_train_result},

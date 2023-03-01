@@ -6,10 +6,24 @@ from sim.simulator_model import SimulatorModel
 from ray.rllib.env.base_env import BaseEnv
 
 
-class Gym_Wrapper(gym.Env):
+class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
     
-    def __init__(self, config, **kwargs):
+    def __init__(self,
+                 config = {},
+                 **kwargs):
+        gym.utils.EzPickle.__init__(
+            self,
+            config,
+        )
+
         super().__init__()
+        
+        # save the environmental config parsed from tune.run
+        # - this includes the following feats: {, worker=1/11, vector_idx=0, remote=False} -
+        self.config = config
+
+        # define episode reset config
+        self.reset_config = self.config.get('reset_config', {})
 
         # define the simulator model
         self.sim = SimulatorModel()
@@ -37,6 +51,8 @@ class Gym_Wrapper(gym.Env):
 
         # convert the state to a Gym state
         state = self.sim.sim_state_to_gym()
+        # clip the state to the observation space
+        state = np.clip(state, self.observation_space.low, self.observation_space.high)
 
         # get -1 reward for each step
         # - except at the terminal state which has zero reward
@@ -49,11 +65,12 @@ class Gym_Wrapper(gym.Env):
 
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
-
-        config = {}
-        state_dict = self.sim.reset(config)
+        
+        
+        state_dict = self.sim.reset(self.reset_config)
         # convert the state to a Gym state
         state = self.sim.sim_state_to_gym()
+        state = np.clip(state, self.observation_space.low, self.observation_space.high)
 
         info = {}
         return state,info
