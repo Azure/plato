@@ -11,7 +11,7 @@ class SimulatorModel:
     def __init__(self,
         render: bool = False,
         log_data: Union[bool, str] = False,
-        debug: bool = True,):
+        debug: bool = False,):
         """ Perform global initialization here if needed before running episodes. """
 
         # render functionality
@@ -36,6 +36,8 @@ class SimulatorModel:
 
     def reset(self, config) -> Dict[str, Any]:
         """ Reset any state from the previous episode and get ready to start a new episode. """
+        
+        print(f"[sim model] Resetting simulator with config: {config}")
         
         # Start simulation with selected config.
         self.sim.reset(config=config)

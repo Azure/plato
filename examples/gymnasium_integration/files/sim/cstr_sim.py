@@ -292,7 +292,10 @@ class CSTRSimulation():
     def truncation(self) -> bool:
         try:
             if self.it_time > 90:
-                print("#### TIME LIMITATION REACHED FOR IT_TIME (90 secs) !! ###")
+                
+                if self.debug:
+                    print("#### TIME LIMITATION REACHED FOR IT_TIME (90 secs) !! ###")
+
                 return True
             else:
                 return False
