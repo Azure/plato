@@ -78,7 +78,7 @@ class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
         reset_config = rl_lesson_init(self.rl_lesson_config)
         state_dict = self.sim.reset(reset_config)
         # convert the state to a Gym state
-        state = self.sim.sim_state_to_gym()
+        state = self.rl_sim_properties.sim_state_to_gym(state_dict)
         state = np.clip(state, self.observation_space.low, self.observation_space.high)
 
         info = {}
