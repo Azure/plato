@@ -4,8 +4,16 @@ import numpy as np
 
 class SimulatorModel:
     """
-    Manages the LunarLander model that represents the simulation for this sample.
+    Manages the CSTR model that represents the simulation for this sample.
     Implements the reset and step methods required for a Bonsai simulator.
+
+    This model relies on the following CSTR sim methods:
+    - reset(config: Dict[str, Any])
+    - step(action: Dict[str, Any])
+    - get_state() -> Dict[str, Any]
+    - termination() -> bool
+    - truncation() -> bool
+
     """
 
     def __init__(self,
@@ -23,8 +31,8 @@ class SimulatorModel:
         
         # initialize the simulator
         self.sim = CSTRSimulation(render = self.render,
-                            log_data = self.log_data,
-                            debug = self.debug)
+                                  log_data = self.log_data,
+                                  debug = self.debug)
         
         pass
 
