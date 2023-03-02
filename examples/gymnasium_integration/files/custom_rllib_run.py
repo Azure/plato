@@ -49,13 +49,20 @@ if __name__ == "__main__":
         args.config = json.loads(args.config)
         args.stop = json.loads(args.stop)
 
+        # Load reset config from file
+        import yaml
+        with open("training_setup/rl_lesson.yml", "r") as file:
+            rl_lesson_config = yaml.safe_load(file)
+            print("rl_lesson_config: ", rl_lesson_config)
+        
+
         print("Algorithm config:", args.config)
 
         tune.run(
             run_or_experiment=args.run,
             config={
                 "env": args.env,  #"WrappedCustomEnv-v0"
-                "env_config": {"reset_config": {"noise_percentage": 10}},
+                "env_config": {"rl_lesson_config": rl_lesson_config},
                 "num_gpus": args.config["num_gpus"],
                 "num_workers": args.config["num_workers"],
                 #"callbacks": {"on_train_result": callbacks.on_train_result},

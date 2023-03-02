@@ -4,6 +4,7 @@ from collections import deque
 import numpy as np
 from sim.simulator_model import SimulatorModel
 from ray.rllib.env.base_env import BaseEnv
+from training_setup.rl_lesson_init import rl_lesson_init
 
 
 class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
@@ -23,7 +24,7 @@ class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
         self.config = config
 
         # define episode reset config
-        self.reset_config = self.config.get('reset_config', {})
+        self.rl_lesson_config = self.config.get('rl_lesson_config', {})
 
         # define the simulator model
         self.sim = SimulatorModel()
@@ -66,8 +67,9 @@ class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
         
-        
-        state_dict = self.sim.reset(self.reset_config)
+        # Setup values for sim config whenever "rl_lesson" has been defined.
+        reset_config = rl_lesson_init(self.rl_lesson_config)
+        state_dict = self.sim.reset(reset_config)
         # convert the state to a Gym state
         state = self.sim.sim_state_to_gym()
         state = np.clip(state, self.observation_space.low, self.observation_space.high)
@@ -84,9 +86,19 @@ class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
         print(f"(action: {action}): (states: {states}) reward = {reward}")
 
 
+
 if __name__ == "__main__":
+
+    # setup rl_lesson config
+    import yaml
+    with open("training_setup/rl_lesson.yml", "r") as file:
+        rl_lesson_config = yaml.safe_load(file)
+        config = {"rl_lesson_config": rl_lesson_config}
+        print("config: ", config)
+
+        
     # create an instance of our custom environment
-    env = Gym_Wrapper({})
+    env = Gym_Wrapper(config)
 
     print(env.action_space)
     print(env.observation_space)
