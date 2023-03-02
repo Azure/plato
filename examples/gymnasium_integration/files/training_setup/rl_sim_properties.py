@@ -11,7 +11,7 @@ class RLSimProperties:
 
     # STATES
     state_len: int = 4
-    state_names: List[str] = ["Tr", "Cr", "Cref", "Tc"]
+    states_to_track: List[str] = ["Tr", "Cr", "Cref", "Tc", "Tc_adjust", "kpi_rms_conc_error"]
 
     # ACTIONS
     action_len: int = 1
@@ -73,3 +73,9 @@ class RLSimProperties:
         """ Return the current reward of the simulator. """
 
         return self.state_len, self.action_len
+
+
+    def get_states_to_track(self):
+        """ Return the states to track. """
+
+        return self.states_to_track

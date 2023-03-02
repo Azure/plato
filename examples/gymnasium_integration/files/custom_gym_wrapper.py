@@ -68,6 +68,11 @@ class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
         reward, terminated, truncated = self.rl_sim_properties.compute_reward_term_and_trun(state_dict, terminated, truncated)
 
         info = {}
+        # add states to track in the info dict (for logging)
+        # - this is used by the 'monitor' wrapper to record the states
+        for state_name in self.rl_sim_properties.get_states_to_track():
+            info["state_" + state_name] = state_dict[state_name]
+
         return state, reward, terminated, truncated, info
 
 
@@ -82,7 +87,7 @@ class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
         state = np.clip(state, self.observation_space.low, self.observation_space.high)
 
         info = {}
-        return state,info
+        return state, info
 
 
     def render(self, action=0, reward=0 ):
