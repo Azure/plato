@@ -4,8 +4,9 @@ from collections import deque
 import numpy as np
 from sim.simulator_model import SimulatorModel
 from ray.rllib.env.base_env import BaseEnv
-from training_setup.rl_lesson_init import rl_lesson_init
 
+from training_setup.rl_lesson_init import rl_lesson_init
+from training_setup.rl_sim_properties import RLSimProperties
 
 class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
     
@@ -26,14 +27,17 @@ class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
         # define episode reset config
         self.rl_lesson_config = self.config.get('rl_lesson_config', {})
 
+        # define sim properties
+        self.rl_sim_properties = RLSimProperties()
+
         # define the simulator model
         self.sim = SimulatorModel()
 
-        # dimensions of the grid
+        # dimensions of the grid. TODO: Remove once we validate no need to use kwargs.
         self.XX = kwargs.get('XX',3)
 
         # get specs for states and actions from the simulator
-        self.state_dim, self.action_dim = self.sim.get_gym_specs()
+        self.state_dim, self.action_dim = self.rl_sim_properties.get_gym_specs()
 
         # configure states
         self.observation_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(self.state_dim,), dtype=np.float32)
@@ -48,17 +52,20 @@ class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
         ''' apply the supplied action '''
 
         # take the action
-        self.sim.step(action)
+        sim_action = self.rl_sim_properties.gym_action_to_sim(action)
+        state_dict = self.sim.step(sim_action)
 
         # convert the state to a Gym state
-        state = self.sim.sim_state_to_gym()
+        state = self.rl_sim_properties.sim_state_to_gym(state_dict)
         # clip the state to the observation space
         state = np.clip(state, self.observation_space.low, self.observation_space.high)
 
         # get -1 reward for each step
         # - except at the terminal state which has zero reward
         # - set the 'terminated' flag if we've reached thermal runaway
-        reward, terminated, truncated = self.sim.compute_reward_term_and_trun()
+        terminated = self.sim.termination()
+        truncated = self.sim.truncation()
+        reward, terminated, truncated = self.rl_sim_properties.compute_reward_term_and_trun(state_dict, terminated, truncated)
 
         info = {}
         return state, reward, terminated, truncated, info
