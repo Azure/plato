@@ -49,7 +49,6 @@ class RLSimProperties:
 
     def sim_state_to_gym(self, state_dict) -> Dict[str, Any]:
         """ Return the current state of the simulator for gym, normalized between [-1 and 1]. """
-        state_dict = self.sim.get_state()
 
         # convert the state to a Gym state and normalize it
         state = [state_dict["Tr"] / 600,
