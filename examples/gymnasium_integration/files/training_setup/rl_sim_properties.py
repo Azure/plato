@@ -3,7 +3,7 @@ import random
 from typing import Any, Dict, List, Union
 import numpy as np
 
-class RLSimProperties:
+class RLSimSpec:
     """
     Manages the Sim Properties that represents the simulation for this sample.
     Implements the reset and step methods required for a RL-AML simulator.
