@@ -6,7 +6,7 @@ from sim.simulator_model import SimulatorModel
 from ray.rllib.env.base_env import BaseEnv
 
 from training_setup.rl_lesson_init import rl_lesson_init
-from training_setup.rl_sim_properties import RLSimSpec
+from training_setup.rl_sim_spec import RLSimSpec
 
 class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
     
