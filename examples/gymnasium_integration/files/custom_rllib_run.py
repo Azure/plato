@@ -60,6 +60,9 @@ if __name__ == "__main__":
 
         tune.run(
             run_or_experiment=args.run,
+            keep_checkpoints_num=2,
+            checkpoint_score_attr="custom_metrics/episode_reward_mean", #"min-episode_reward_mean",
+            checkpoint_freq=3,
             config={
                 "env": args.env,  #"WrappedCustomEnv-v0"
                 "env_config": {"rl_lesson_config": rl_lesson_config},
