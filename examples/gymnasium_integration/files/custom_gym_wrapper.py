@@ -76,7 +76,8 @@ class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
         return state, reward, terminated, truncated, info
 
 
-    def reset(self, seed=None):
+    def reset(self, *, seed=None, options=None):
+        # seed and options needed for ray 2.3.0 compatibility
         super().reset(seed=seed)
         
         # Setup values for sim config whenever "rl_lesson" has been defined.
