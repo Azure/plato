@@ -10,8 +10,10 @@ class RLSimSpec:
     """
 
     # STATES
-    state_len: int = 4
-    states_to_track: List[str] = ["Tr", "Cr", "Cref", "Tc", "Tc_adjust", "kpi_rms_conc_error"]
+    # Set the number of states that are provided as input to the RL agent (must match shape in 'sim_state_to_gym' method).
+    obs_state_len: int = 4
+    # Set all the states to be logged throughout RL training session, including KPI metrics.
+    sim_states_to_log: List[str] = ["Tr", "Cr", "Cref", "Tc", "Tc_adjust", "kpi_rms_conc_error"]
 
     # ACTIONS
     action_len: int = 1
@@ -57,6 +59,9 @@ class RLSimSpec:
                 state_dict["Tc"] / 600]
         state = np.array(state, np.float32)
 
+        assert state.shape == (self.obs_state_len,), \
+        f"The observable state shape for RL training is not correct. Expected: {self.obs_state_len}, Actual: {state.shape}."
+
         return state
     
 
@@ -72,10 +77,10 @@ class RLSimSpec:
     def get_gym_specs(self) -> float:
         """ Return the current reward of the simulator. """
 
-        return self.state_len, self.action_len
+        return self.obs_state_len, self.action_len
 
 
-    def get_states_to_track(self):
-        """ Return the states to track. """
+    def get_states_to_log(self):
+        """ Return all the sim states to monitor during brain training. """
 
-        return self.states_to_track
+        return self.sim_states_to_log
