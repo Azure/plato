@@ -7,13 +7,14 @@ from azureml.core.experiment import Experiment
 from aml_utils.aml_codeflow import aml_environment_create, aml_compute_create
 
 ############ PARAM SETUP ############
-compute_name = 'gym-gpu-compute'
-# Base image for the training environment (no files pushed).
-ray_environment_name = 'gym-gpu-image'
-ray_environment_recreate = False
-# Experiment to run (sim files pushed).
-experiment_name = 'gym-gpu-rllib-multi-node'
-max_experiment_time = 1800 # seconds
+# Compute target to run the experiment on (note: no files pushed to compute).
+COMPUTE_NAME = 'gym-gpu-compute'
+# Base image for the training environment (note: no files pushed to environment).
+RAY_ENVIRONMENT_NAME = 'gym-gpu-image'
+RAY_ENVIRONMENT_RECREATE = False
+# Experiment to run (note: includes sim files to be used for training).
+EXPERIMENT_NAME = 'gym-gpu-rllib-multi-node'
+MAX_EXPERIMENT_TIME = 1800 # seconds
 
 
 class AML_Pipeline:
@@ -217,11 +218,11 @@ class AML_Pipeline:
 if __name__ == "__main__":
 
     job_config = {
-        "compute_name": compute_name,
-        "ray_environment_name": ray_environment_name,
-        "ray_environment_recreate": ray_environment_recreate,
-        "experiment_name": experiment_name,
-        "max_experiment_time": max_experiment_time
+        "compute_name": COMPUTE_NAME,
+        "ray_environment_name": RAY_ENVIRONMENT_NAME,
+        "ray_environment_recreate": RAY_ENVIRONMENT_RECREATE,
+        "experiment_name": EXPERIMENT_NAME,
+        "max_experiment_time": MAX_EXPERIMENT_TIME
     }
 
     # Create an AML_Pipeline object.
