@@ -121,6 +121,27 @@ your RL agent training session. Note, your RESET method should be the one applyi
   - `min`/`max` values: this will be used to collect a float number uniformly.
   - `values` list: this array should contain all the values among each the agent should choose randomly during each episode start.
 
+### Sim Integration: (3) Set up PY libraries
+
+There are two files that require your attention when updating this workflow with your own custom simulation. The first
+step is identifying the PY libraries your simulation relies on. Then, go and make changes in the following files:
+
+1. Update the docker file at `docker/Dockerfile-gpu`, to include your desired libraries.
+   - Feel free to modify the libraries under `# REQUIREMENT: Install CSTR-specific packages` to the ones applicable to your simulation.
+2. Add the libraries to `core_aml_rllib.yml`.
+   - You will have to update your conda environment: `conda env update -n aml_rllib_test --file core_aml_rllib.yml`.
+
+### Sim Integration: (4) Test sim integration locally
+
+Prior to submitting your new experiment/job to Azure, test your local integration running the following command(s):
+
+```
+cd files
+python custom_gym_wrapper.py
+```
+
+*Note, you will have to first update your conda environment with the necessary PY libraries, as described in the previous step.*
+
 ## Final Thoughts
 
 As mentioned at the very beginning, the above sections describe the relevant sections so that you can integrate your own
