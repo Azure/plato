@@ -19,7 +19,7 @@ class RLSimSpec:
     action_len: int = 1
 
     # RL PROPERTIES
-    gamma: int = 1
+    _reward_exponential_K: int = 1
 
     def __init__(self,
         debug: bool = False,):
@@ -38,7 +38,7 @@ class RLSimSpec:
         cr_error = abs(state_dict["Cr"] - state_dict["Cref"])
 
         # get the reward from the simulator
-        reward = np.exp(-cr_error * self.gamma)
+        reward = np.exp(-cr_error * self._reward_exponential_K)
 
         # adjust based on termination and truncation
         if terminated:
