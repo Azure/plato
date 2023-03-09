@@ -70,7 +70,7 @@ class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
         info = {}
         # add states to track in the info dict (for logging)
         # - this is used by the 'monitor' wrapper to record the states
-        for state_name in self.rl_sim_spec.get_states_to_track():
+        for state_name in self.rl_sim_spec.get_states_to_log():
             info["state_" + state_name] = state_dict[state_name]
 
         return state, reward, terminated, truncated, info
