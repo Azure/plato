@@ -78,6 +78,7 @@ class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
 
     def reset(self, *, seed=None, options=None):
         # seed and options needed for ray 2.3.0 compatibility
+        # TODO: review how to best integrate the options dict into our pipeline.
         super().reset(seed=seed)
         
         # Setup values for sim config whenever "rl_lesson" has been defined.
