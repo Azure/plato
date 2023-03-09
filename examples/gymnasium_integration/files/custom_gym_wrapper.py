@@ -5,20 +5,39 @@ import numpy as np
 from sim.simulator_model import SimulatorModel
 from ray.rllib.env.base_env import BaseEnv
 
+from training_setup.rl_lesson_init import rl_lesson_init
+from training_setup.rl_sim_spec import RLSimSpec
 
-class Gym_Wrapper(gym.Env):
+class Gym_Wrapper(gym.Env, gym.utils.EzPickle):
     
-    def __init__(self, config, **kwargs):
+    def __init__(self,
+                 config = {},
+                 **kwargs):
+        gym.utils.EzPickle.__init__(
+            self,
+            config,
+        )
+
         super().__init__()
+        
+        # save the environmental config parsed from tune.run
+        # - this includes the following feats: {, worker=1/11, vector_idx=0, remote=False} -
+        self.config = config
+
+        # define episode reset config
+        self.rl_lesson_config = self.config.get('rl_lesson_config', {})
+
+        # initialize sim specification
+        self.rl_sim_spec = RLSimSpec()
 
         # define the simulator model
         self.sim = SimulatorModel()
 
-        # dimensions of the grid
+        # dimensions of the grid. TODO: Remove once we validate no need to use kwargs.
         self.XX = kwargs.get('XX',3)
 
         # get specs for states and actions from the simulator
-        self.state_dim, self.action_dim = self.sim.get_gym_specs()
+        self.state_dim, self.action_dim = self.rl_sim_spec.get_gym_specs()
 
         # configure states
         self.observation_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(self.state_dim,), dtype=np.float32)
@@ -33,30 +52,42 @@ class Gym_Wrapper(gym.Env):
         ''' apply the supplied action '''
 
         # take the action
-        self.sim.step(action)
+        sim_action = self.rl_sim_spec.gym_action_to_sim(action)
+        state_dict = self.sim.step(sim_action)
 
         # convert the state to a Gym state
-        state = self.sim.sim_state_to_gym()
+        state = self.rl_sim_spec.sim_state_to_gym(state_dict)
+        # clip the state to the observation space
+        state = np.clip(state, self.observation_space.low, self.observation_space.high)
 
         # get -1 reward for each step
         # - except at the terminal state which has zero reward
         # - set the 'terminated' flag if we've reached thermal runaway
-        reward, terminated, truncated = self.sim.compute_reward_term_and_trun()
+        terminated = self.sim.termination()
+        truncated = self.sim.truncation()
+        reward, terminated, truncated = self.rl_sim_spec.compute_reward_term_and_trun(state_dict, terminated, truncated)
 
         info = {}
+        # add states to track in the info dict (for logging)
+        # - this is used by the 'monitor' wrapper to record the states
+        for state_name in self.rl_sim_spec.get_states_to_log():
+            info["state_" + state_name] = state_dict[state_name]
+
         return state, reward, terminated, truncated, info
 
 
-    def reset(self, seed=None, options=None):
+    def reset(self, seed=None):
         super().reset(seed=seed)
-
-        config = {}
-        state_dict = self.sim.reset(config)
+        
+        # Setup values for sim config whenever "rl_lesson" has been defined.
+        reset_config = rl_lesson_init(self.rl_lesson_config)
+        state_dict = self.sim.reset(reset_config)
         # convert the state to a Gym state
-        state = self.sim.sim_state_to_gym()
+        state = self.rl_sim_spec.sim_state_to_gym(state_dict)
+        state = np.clip(state, self.observation_space.low, self.observation_space.high)
 
         info = {}
-        return state,info
+        return state, info
 
 
     def render(self, action=0, reward=0 ):
@@ -67,9 +98,19 @@ class Gym_Wrapper(gym.Env):
         print(f"(action: {action}): (states: {states}) reward = {reward}")
 
 
+
 if __name__ == "__main__":
+
+    # setup rl_lesson config
+    import yaml
+    with open("training_setup/rl_lesson.yml", "r") as file:
+        rl_lesson_config = yaml.safe_load(file)
+        config = {"rl_lesson_config": rl_lesson_config}
+        print("config: ", config)
+
+        
     # create an instance of our custom environment
-    env = Gym_Wrapper({})
+    env = Gym_Wrapper(config)
 
     print(env.action_space)
     print(env.observation_space)
