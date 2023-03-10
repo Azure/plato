@@ -5,9 +5,11 @@ dependencies:
 - pip:
   - scikit-image==0.19.3
   - azureml-core==1.49.0
-  - azureml-defaults==1.49.0
-  - azureml-mlflow==1.49.0
-  - azureml-telemetry==1.49.0
+#  - azureml-defaults==1.49.0
+#  - azureml-mlflow==1.49.0
+#  - azureml-telemetry==1.49.0
+  - azure-ai-ml==1.4.0
+  - azure-identity==1.12.0
   - do-mpc==4.4.0
   - gekko==1.0.6
   - casadi==3.5.5
