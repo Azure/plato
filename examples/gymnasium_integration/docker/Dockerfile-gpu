@@ -69,14 +69,12 @@ RUN pip install 'msrest<0.7.0'
 RUN pip install protobuf==3.20.0
 
 
-# UPDATE TO LATEST VERSION OF RAY (which works with gymnasium)
-RUN apt-get install -y wget
-RUN wget https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-3.0.0.dev0-cp38-cp38-manylinux2014_x86_64.whl
-RUN pip install ray-3.0.0.dev0-cp38-cp38-manylinux2014_x86_64.whl
-
 # REQUIREMENT: Install Gymnasium wrapper
 #RUN pip install 'gym~=0.26.2' \
-RUN pip install 'gymnasium~=0.27.1'
+RUN pip install 'ray[default]~=2.3.0' \
+                'ray[tune]~=2.3.0' \
+                'ray[rllib]~=2.3.0' \
+                'gymnasium~=0.27.1'
 
 # REQUIREMENT: Install extra packages to resolve issues with updated libraries
 RUN pip install 'typer' \
