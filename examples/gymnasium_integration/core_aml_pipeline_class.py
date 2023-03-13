@@ -107,10 +107,17 @@ class AML_Pipeline:
                 pass
 
             # DUMP CONFIG TO FILE.
-            ws = Workspace(workspace_name=workspace_name,
-                           subscription_id=subscription_id,
-                           resource_group=resource_group)
-            ws.write_config(path=config_folder, file_name=aml_config_file)
+            import json
+            with open(aml_config_filepath, 'w+') as f:
+                aml_config = {
+                    "Id": None,
+                    "Scope": "/subscriptions/" + subscription_id + \
+                            "/resourceGroups/" + resource_group + \
+                            "/providers/Microsoft.MachineLearningServices" + \
+                            "/workspaces/" + workspace_name,
+                }
+                print("aml_config:", aml_config)
+                json.dump(aml_config, f)
 
 
         # GET CREDENTIAL
