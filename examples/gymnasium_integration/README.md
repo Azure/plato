@@ -30,10 +30,13 @@ Modify them as needed:
  - MAX_EXPERIMENT_TIME: max time to run the job for before halting execution.
 
 To run the script, you will need to setup a conda environment. Before setting it up, please install
-[miniconda](https://docs.conda.io/en/latest/miniconda.html). Once installed, run the following command in your CLI
-to get your conda environment set up:
+[miniconda](https://docs.conda.io/en/latest/miniconda.html). Once installed, you will be ready to set up your
+conda environment. First, open the CLI window. Then, traverse to the gymnasium_integration folder. Lastly,
+run the "conda env create" command:
 
 ```
+cd examples
+cd gymnasium_integration
 conda env create --file core_aml_rllib.yml
 ```
 
