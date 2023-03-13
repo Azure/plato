@@ -16,3 +16,7 @@ classifiers = [
 [project.urls]
 "Homepage" = "https://github.com/Azure/plato"
 "Bug Tracker" = "https://github.com/Azure/plato"
+
+[tool.isort]
+profile = "black"
+src_paths = ["src", "tests"]
