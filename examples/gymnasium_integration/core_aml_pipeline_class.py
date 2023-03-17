@@ -183,7 +183,7 @@ class AML_Pipeline:
         return self.compute_target
 
 
-    def _environment_setup(self, dockerfile_path="docker\\Dockerfile-gpu"):
+    def _environment_setup(self, dockerfolder="docker", dockerfile="Dockerfile-gpu"):
 
         print("\n##### ENVIRONMENT SETUP #####")
 
@@ -199,7 +199,7 @@ class AML_Pipeline:
 
         # Create environment if it doesn't exist or whenever an update is requested.
         if self.ray_environment_recreate:
-            ray_gpu_env = aml_environment_create(self.ml_client, self.ray_environment_name, dockerfile_path)
+            ray_gpu_env = aml_environment_create(self.ml_client, self.ray_environment_name, dockerfolder, dockerfile)
     
         self.ray_gpu_env = ray_gpu_env
         return self.ray_gpu_env
