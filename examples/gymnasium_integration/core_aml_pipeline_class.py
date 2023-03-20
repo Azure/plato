@@ -57,6 +57,7 @@ class AML_Pipeline:
 
         print(f"Running experiment with name {self.experiment_name}, with a max time limit of {self.max_experiment_time} secs...")
         
+        # TODO: Cap number of workers to the max amount of nodes/cores in the cluster.
         exp_command=[
             'python', script_name,
             '--run', training_algorithm,
@@ -145,6 +146,8 @@ class AML_Pipeline:
         print("\n##### COMPUTE TARGET SETUP #####")
 
         # HARD CODED VM SPECS.
+        # TODO: Decouple the compute cluster creation workflow from experiment run.
+        #       Note, since # of workers relies on # of cores, we will need to add checks later.
         # This example uses GPU VM. For using CPU VM, set SKU to STANDARD_D2_V2
         compute_min_nodes = 0
         compute_max_nodes = 2
