@@ -150,7 +150,10 @@ and your **Python** simulation.
      - Note, your simulation step function must take a dictionary with the list of actions (action_name: action_value) for integration with the section below.
      - Aditionally, as done above for RESET method, you will also need to also update the reference to `self.sim.get_states()`.
    - `termination` method should call your sim method (or attribute) in charge of raising a flag (True) whenever the sim must be halted and restarted.
+     - Termination is often used to determine the simulation has run into a state which is not feasible due to suboptimal control.
    - `truncation` method should call your sim method (or attribute) in charge of raising a flag (True) whenever the sim has reached the max amount of alloted time per episode.
+     - Truncation is often used to determine the time-based end of the episode (i.e.: episode length of 90 steps).
+     - Set this value to be long enough for the agent to be exposed to the dynamics of the system.
    - `sim_name` property is used to define the name of your simulation. Note, it is currently unused.
 
 Following these steps, you have correctly wrapped your simulation to be compatible with our gymnasium wrapper. Yet,
