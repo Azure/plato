@@ -1,0 +1,18 @@
+channels:
+- anaconda
+- conda-forge
+dependencies:
+- python=3.8.5
+- pip=22.3.1
+- pip:
+   # Dependencies for Ray on AML
+   - azureml-mlflow
+   - azureml-defaults
+   - ray-on-aml
+   - ray[data]==2.3.0
+   - ray[rllib]==2.3.0
+   # Deps for RLlib
+   - tensorflow==2.11.1
+   # Dependencies for the Simple Adder
+   - gymnasium
+   - numpy==1.24.2
