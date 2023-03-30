@@ -130,3 +130,13 @@ dmypy.json
 
 # Azure credentials
 .azureml/
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# OS X
+.DS_Store
+.Spotlight-V100
+.Trashes
+._*
