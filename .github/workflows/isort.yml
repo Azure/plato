@@ -20,4 +20,4 @@ jobs:
         pip install isort
     - name: Analysing the code with isort
       run: |
-        isort --check $(find . -iname '*.py' ! -path './examples/gymnasium_integration/*')
+        isort --check $(git ls-files '*.py')

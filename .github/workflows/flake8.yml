@@ -20,4 +20,4 @@ jobs:
         pip install flake8
     - name: Linting the code with flake8
       run: |
-        flake8 --max-line-length 88 $(find . -iname '*.py' ! -path './examples/gymnasium_integration/*')
+        flake8 --max-line-length 88 $(git ls-files '*.py')
