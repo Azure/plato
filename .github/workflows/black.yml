@@ -20,4 +20,4 @@ jobs:
         pip install black
     - name: Analysing code with black
       run: |
-        black --check $(find . -iname '*.py' ! -path './examples/gymnasium_integration/*')
+        black --check $(git ls-files '*.py')

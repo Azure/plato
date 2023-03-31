@@ -1,5 +1,0 @@
-noise_percentage:
-  min: 0
-  max: 20
-Cref_signal:
-  values: [1, 2, 3, 4, 5]

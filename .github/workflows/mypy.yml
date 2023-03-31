@@ -20,4 +20,4 @@ jobs:
         pip install mypy
     - name: Analysing code with mypy
       run: |
-        mypy $(find . -iname '*.py' ! -path './examples/gymnasium_integration/*')
+        mypy $(git ls-files '*.py')
