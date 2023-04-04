@@ -1,5 +1,6 @@
 """Implementation of a simple simulation/environment in AML."""
 from collections import OrderedDict
+
 import numpy as np
 from gymnasium import Env
 from gymnasium.spaces import Box, Dict
