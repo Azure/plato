@@ -1,7 +1,7 @@
 """Implementation of a simple simulation/environment in AML."""
 import numpy as np
 from gymnasium import Env
-from gymnasium.spaces import Box, Discrete, Dict
+from gymnasium.spaces import Box, Dict
 from collections import OrderedDict
 
 class SimpleAdder(Env):
