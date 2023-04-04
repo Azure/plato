@@ -20,3 +20,6 @@ classifiers = [
 [tool.isort]
 profile = "black"
 src_paths = ["src", "tests"]
+
+[tool.mypy]
+ignore_missing_imports = true
