@@ -1,8 +1,8 @@
 """Implementation of a simple simulation/environment in AML."""
 import numpy as np
+from collections import OrderedDict
 from gymnasium import Env
 from gymnasium.spaces import Box, Dict
-from collections import OrderedDict
 
 class SimpleAdder(Env):
     """
@@ -31,7 +31,7 @@ class SimpleAdder(Env):
 
     def _get_obs(self):
         """Get the observable state."""
-        return OrderedDict([(key, np.array([self.state[key]], dtype="float32")) for key in self.observation_space.spaces.keys()])
+        return OrderedDict([(key, np.array([self.state[key]])) for key in self.observation_space.spaces.keys()])
 
     def _get_info(self):
         """Get additional info not needed by the agent's decision."""
