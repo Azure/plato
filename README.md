@@ -25,6 +25,18 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
+
+### Prerequisites
+
+Please ensure to install the development dependencies needed for this
+project in your virtual environment.
+You can do this by running the following command from the root of the
+repository:
+
+```bash
+pip install -r requirements/dev_requirements.txt
+```
+
 ### Coding Standards
 
 In this repository, we use code linting software and require to run tests
