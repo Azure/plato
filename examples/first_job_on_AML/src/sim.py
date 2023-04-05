@@ -29,10 +29,7 @@ class SimpleAdder(Env):
 
     def _get_obs(self):
         """Get the observable state."""
-        return {
-            key: np.array([self.state[key]])
-            for key in self.observation_space.spaces.keys()
-        }
+        return {"value": np.array([self.state["value"]])}
 
     def _get_info(self):
         """Get additional info not needed by the agent's decision."""
