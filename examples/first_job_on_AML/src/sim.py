@@ -1,6 +1,4 @@
 """Implementation of a simple simulation/environment in AML."""
-from collections import OrderedDict
-
 import numpy as np
 from gymnasium import Env
 from gymnasium.spaces import Box, Dict
@@ -26,29 +24,27 @@ class SimpleAdder(Env):
         self.observation_space = Dict(
             {"value": Box(low=-float("inf"), high=float("inf"))}
         )
-
         self.action_space = Dict({"addend": Box(low=-10, high=10, dtype=np.int32)})
+        self.state = {"value": 0}
 
     def _get_obs(self):
         """Get the observable state."""
-        return OrderedDict(
-            [
-                (key, np.array([self.state[key]]))
-                for key in self.observation_space.spaces.keys()
-            ]
-        )
+        return {
+            key: np.array([self.state[key]])
+            for key in self.observation_space.spaces.keys()
+        }
 
     def _get_info(self):
         """Get additional info not needed by the agent's decision."""
         return {}
 
-    def reward(self):
+    def reward(self, state):
         """
         Return the reward value.
 
         For this simple example this is just the distance to the number 50.
         """
-        return -abs(self.state["value"] - 50)
+        return -abs(state["value"] - 50)
 
     def reset(self, *, seed=None, options=None):
         """Start a new episode."""
@@ -60,7 +56,7 @@ class SimpleAdder(Env):
         """Advance one iteration by applying the given ``action``."""
         self.state["value"] += action["addend"].item()
         self.iter += 1
-        reward = self.reward()
+        reward = self.reward(self.state)
         terminated = self.state["value"] == 50
         truncated = self.iter >= 10
         return (
