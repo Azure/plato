@@ -1,15 +1,18 @@
-# Plato Toolkit
+# Plato Toolkit: Reinforcement Learning on Azure ML
 
-## Installing the package
+Plato is a Python toolkit that enables users to train reinforcement learning (RL) agents at scale on [Azure Machine Learning (AML)](https://learn.microsoft.com/en-us/azure/machine-learning/) compute clusters using [Ray RLLib](https://docs.ray.io/en/latest/rllib/index.html#). With AML, you can access powerful CPU or GPU enabled virtual machines to scale up your training to meet the computational speed and load requirements of your simulation environment and model architecture.
 
-The package can be installed by following these steps:
+In addition to RL training and assessment on AML, Plato offers additional features and guidance for domain randomization, hyperparameter tuning via Ray Tune, experiment management with MLflow, and Dockerized deployment of a trained agent.
 
-- Cloning the repository in your local machine
-- Create a Python virtual environment or Conda environment
-- Install the package as follows:
-```bash
-pip install .
-```
+## Documentation
+* [Glossary](./plato-docs/docs/glossary.md)
+* Prerequisites
+    * [Create AML Resources](./docs/index.md#create-azure-resources)
+    * [AML Environment Setup](./docs/index.md#aml-environment-setup)
+    * [Custom Simulation Environment](./docs/index.md#custom-simulation-environment-with-gymnasium)
+* Samples
+    * [Simple Adder](https://github.com/Azure/plato/tree/main/examples/first_job_on_AML):  A minimal working example of a Python simulation environment that can be connected to RLlib and used to train an agent on AML. You can think of it as a "Hello World" sample.
+* User Guides
 
 ## Contributing
 
@@ -24,7 +27,6 @@ provided by the bot. You will only need to do this once across all repos using o
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-
 
 ### Prerequisites
 
