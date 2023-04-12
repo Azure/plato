@@ -23,7 +23,7 @@ with a custom Gymnasium environment.
 - Create an AML environment using the conda file provided: ``conda.yml`` by
   running the following command:
 ```bash
-az ml environment create --name 'aml-environment' --conda-file conda.yml --image mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04 --resource-group $YOUR_RESOURCE_GROUP --workspace-name $YOUR_WORKSPACE
+az ml environment create --name aml-environment --conda-file conda.yml --image mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04 --resource-group $YOUR_RESOURCE_GROUP --workspace-name $YOUR_WORKSPACE
 ```
 
 ## Run the experiment
