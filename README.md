@@ -91,6 +91,11 @@ guidelines:
 -	PR can contain more commits, but it is always better to have one PR for one commit
 -	PR should have a clear description of why the change is made and why it is made in a particular way
 
+### Building the docs
+
+Docs are built automatically using ``mkdocs`` whenever a change lands to
+main.
+
 ## Trademarks
 
 This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft
