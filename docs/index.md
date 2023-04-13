@@ -67,7 +67,7 @@ dependencies:
 
 Azure CLI command:
 ``` Azure CLI
-az ml environment create --name 'aml-environment' --conda-file conda.yml --image mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04 --resource-group $YOUR_RESOURCE_GROUP --workspace-name $YOUR_WORKSPACE
+az ml environment create --name aml-environment --conda-file conda.yml --image mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04 --resource-group $YOUR_RESOURCE_GROUP --workspace-name $YOUR_WORKSPACE
 ```
 
 ## Custom Simulation Environment with Gymnasium
