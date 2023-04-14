@@ -140,3 +140,6 @@ desktop.ini
 .Spotlight-V100
 .Trashes
 ._*
+
+# Ray checkpoints
+**/checkpoint_*/
