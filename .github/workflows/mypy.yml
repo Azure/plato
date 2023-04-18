@@ -20,4 +20,4 @@ jobs:
         pip install -r requirements/dev_requirements.txt
     - name: Analysing code with mypy
       run: |
-        mypy $(git ls-files '*.py')
+        mypy --explicit-package-bases $(git ls-files '*.py')
