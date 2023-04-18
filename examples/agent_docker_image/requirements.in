@@ -1,0 +1,6 @@
+gymnasium
+numpy
+ray[default]
+ray[rllib]
+ray[serve]
+tensorflow
