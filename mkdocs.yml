@@ -4,3 +4,5 @@ nav:
     - Home: index.md
     - User Guides: user_guides.md
     - Glossary: glossary.md
+theme:
+    name: readthedocs
