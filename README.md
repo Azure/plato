@@ -5,11 +5,11 @@ Plato is a Python toolkit that enables users to train reinforcement learning (RL
 In addition to RL training and assessment on AML, Plato offers additional features and guidance for domain randomization, hyperparameter tuning via Ray Tune, experiment management with MLflow, and Dockerized deployment of a trained agent.
 
 ## Documentation
-* [Glossary](./plato-docs/docs/glossary.md)
+* [Glossary](https://azure.github.io/plato/glossary/)
 * Prerequisites
-    * [Create AML Resources](./docs/index.md#create-azure-resources)
-    * [AML Environment Setup](./docs/index.md#aml-environment-setup)
-    * [Custom Simulation Environment](./docs/index.md#custom-simulation-environment-with-gymnasium)
+    * [Create AML Resources](https://azure.github.io/plato/#create-azure-resources)
+    * [AML Environment Setup](https://azure.github.io/plato/#aml-environment-setup)
+    * [Custom Simulation Environment](https://azure.github.io/plato/#custom-simulation-environment-with-gymnasium)
 * Samples
     * [Simple Adder](https://github.com/Azure/plato/tree/main/examples/first_job_on_AML):  A minimal working example of a Python simulation environment that can be connected to RLlib and used to train an agent on AML. You can think of it as a "Hello World" sample.
 * User Guides
