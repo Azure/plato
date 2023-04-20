@@ -9,7 +9,7 @@ Learn how to train and deploy RL agents at scale with Ray RLlib and Azure Machin
     * [AML Environment Setup](#aml-environment-setup)
     * [Custom Simulation Environment](#custom-simulation-environment-with-gymnasium)
 * Samples
-    * [Simple Adder](https://github.com/Azure/plato/tree/main/examples/first_job_on_AML):  A minimal working example of a Python simulator that can be connected to RLlib and used to train an agent on AML. You can think of it as a "Hello World" sample.
+    * [Simple Adder](https://github.com/Azure/plato/tree/main/examples/getting-started-on-aml):  A minimal working example of a Python simulator that can be connected to RLlib and used to train an agent on AML. You can think of it as a "Hello World" sample.
 * User Guides
 
 
@@ -41,7 +41,7 @@ Once you have an AML workspace that contains a compute cluster ready to go, the 
 
 A user-managed AML environment specifies the Python packages required to run your simulation and Ray RLlib code. You can follow the [how-to guide on configuring AML environments](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-environment) or try our preferred method below using a conda file.
 
-We've provided a `conda.yml` file and Azure CLI command that you can use to create an environment for the [Simple Adder sample](https://github.com/Azure/plato/tree/main/examples/first_job_on_AML) within this toolkit. Simply save the file and run the CLI command from the same location. For more detailed instructions, you can follow the guide to [create an environment from a conda file in AML studio](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-environments-in-studio) or with the [AML Python SDK](https://learn.microsoft.com/en-us/cli/azure/ml/environment?view=azure-cli-latest#az-ml-environment-create).
+We've provided a `conda.yml` file and Azure CLI command that you can use to create an environment for the [Simple Adder sample](https://github.com/Azure/plato/tree/main/examples/getting-started-on-aml) within this toolkit. Simply save the file and run the CLI command from the same location. For more detailed instructions, you can follow the guide to [create an environment from a conda file in AML studio](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-environments-in-studio) or with the [AML Python SDK](https://learn.microsoft.com/en-us/cli/azure/ml/environment?view=azure-cli-latest#az-ml-environment-create).
 
 ```yaml
 # conda.yml
@@ -79,7 +79,7 @@ Before you can train an RL agent on AML, your simulation environment needs to be
     * For example, if your observation_space is a `gymnasium.spaces.Box` space with shape=(1,) and dtype=np.float32, you should make sure that your observation is a numpy array of shape (1,) and dtype np.float32.
 
 
-After you complete the integration, we suggest that you confirm it can run on your local machine before scaling on AML. Our [Simple Adder sample](https://github.com/Azure/plato/tree/main/examples/first_job_on_AML) provides you with the code to run it both locally and on AML.
+After you complete the integration, we suggest that you confirm it can run on your local machine before scaling on AML. Our [Simple Adder sample](https://github.com/Azure/plato/tree/main/examples/getting-started-on-aml) provides you with the code to run it both locally and on AML.
 
 
 
