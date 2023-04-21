@@ -1,0 +1,4 @@
+gymnasium
+numpy
+ray[default,rllib,serve]>=2.3.0
+tensorflow
