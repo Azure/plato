@@ -11,7 +11,7 @@ In addition to RL training and assessment on AML, Plato offers additional featur
     * [AML Environment Setup](https://azure.github.io/plato/#aml-environment-setup)
     * [Custom Simulation Environment](https://azure.github.io/plato/#custom-simulation-environment-with-gymnasium)
 * Samples
-    * [Simple Adder](https://github.com/Azure/plato/tree/main/examples/first_job_on_AML):  A minimal working example of a Python simulation environment that can be connected to RLlib and used to train an agent on AML. You can think of it as a "Hello World" sample.
+    * [Simple Adder](https://github.com/Azure/plato/tree/main/examples/getting-started-on-aml):  A minimal working example of a Python simulation environment that can be connected to RLlib and used to train an agent on AML. You can think of it as a "Hello World" sample.
 * User Guides
 
 ## Contributing
