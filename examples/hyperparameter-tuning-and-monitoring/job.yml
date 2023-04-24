@@ -1,0 +1,17 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+code: src
+command: >-
+  python mlflow_run.py
+# your enviornment name should include the `azureml` prefix and the `@<version-name>` suffix
+environment: azureml:ray-mlflow-env@latest
+# your compute name should have `azureml:` prefix
+compute: azureml:cpu
+display_name: aml-ray-mlflow
+experiment_name: aml-ray-mlflow
+description: Integrating MLFlow with AML.
+# Needed for using ray on AML
+distribution:
+   type: mpi
+# Modify the following and num_rollout_workers in main to use more workers
+resources:
+  instance_count: 8

@@ -141,5 +141,13 @@ desktop.ini
 .Trashes
 ._*
 
+# AML files
+config.json
+mlruns/
+
+# vscode
+*.code-workspace
+etc/
+
 # Ray checkpoints
 **/checkpoint_*/
