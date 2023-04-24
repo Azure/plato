@@ -32,8 +32,8 @@ def check_and_transform(observation_space, state):
                 observation_space.shape
             )
         elif isinstance(observation_space, spaces.Discrete):
-            # Convert the instance to an integer within the range of the space
-            return int(state) % observation_space.n
+            # Convert the instance to an integer
+            return int(state)
         elif isinstance(observation_space, spaces.Dict):
             # Convert the instance to a dictionary with valid values for each
             # key in the space
