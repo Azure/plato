@@ -22,4 +22,4 @@ jobs:
         pip install -r requirements/dev_requirements.txt
     - name: Running tests
       run: |
-        pytest tests
+        pytest
