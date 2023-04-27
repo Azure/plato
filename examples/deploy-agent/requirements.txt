@@ -1,4 +1,4 @@
-gymnasium
-numpy
-ray[default,rllib,serve]>=2.3.0
+gymnasium==0.26.3
+numpy==1.24.2
+ray[default,rllib,serve]==2.3.0
 tensorflow
