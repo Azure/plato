@@ -6,8 +6,8 @@ command: >-
 environment: azureml:ray-mlflow-env@latest
 # your compute name should have `azureml:` prefix
 compute: azureml:cpu
-display_name: aml-ray-mlflow
-experiment_name: aml-ray-mlflow
+display_name: mlflow_pbt_monitor
+experiment_name: mlflow_pbt_monitor
 description: Integrating MLFlow with AML.
 # Needed for using ray on AML
 distribution:
