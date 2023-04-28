@@ -1,6 +1,8 @@
 import argparse
 import random
 
+import mlflow
+from mlflow.utils.mlflow_tags import MLFLOW_PARENT_RUN_ID
 from ray import air, tune
 from ray.air.integrations.mlflow import MLflowLoggerCallback
 from ray.tune.schedulers import PopulationBasedTraining
@@ -73,6 +75,11 @@ def run() -> tune.ResultGrid:
     # Stop when we've either reached 100 training iterations or reward=300
     stopping_criteria = {"training_iteration": 100, "episode_reward_mean": 300}
 
+    # Get current run ID from MLFlow and pass it the callback
+    current_run = mlflow.active_run()
+    if current_run is None:
+        current_run = mlflow.start_run()
+
     tuner = tune.Tuner(
         "PPO",
         tune_config=tune.TuneConfig(
@@ -97,11 +104,15 @@ def run() -> tune.ResultGrid:
             "sgd_minibatch_size": tune.choice([128, 512, 2048]),
             "train_batch_size": tune.choice([10000, 20000, 40000]),
         },
+        # MLFlow callback uses parent_run_id and tracks all hyperparameter
+        # runs as child jobs
         run_config=air.RunConfig(
             stop=stopping_criteria,
             callbacks=[
                 MLflowLoggerCallback(
-                    experiment_name="pbt_ppo", tags=None, save_artifact=True
+                    tags={MLFLOW_PARENT_RUN_ID: current_run.info.run_id},
+                    experiment_name="pbt_ppo",
+                    save_artifact=True,
                 )
             ],
         ),
