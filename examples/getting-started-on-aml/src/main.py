@@ -16,6 +16,15 @@ from sim import SimpleAdder as SimEnv
 # Register the simulation as an RLlib environment.
 register_env("sim_env", lambda config: SimEnv(config))
 
+# Domain Randomization:
+# Provide allowed initial values for the simple adder
+# This will be passed as env_config to the sim environment
+config = {
+    "values": range(-10, 10),
+    # Customize maximum episode duration
+    "max_steps": 10,
+}
+
 
 def train(local=False):
     # Define the algo for training the agent
@@ -27,7 +36,8 @@ def train(local=False):
         .resources(num_gpus=0)
         # Set the training batch size to the appropriate number of steps
         .training(train_batch_size=4_000)
-        .environment(env="sim_env")
+        # config is passed to apply domain randomization
+        .environment(env="sim_env", env_config=config)
         .build()
     )
     # Train for 10 iterations
