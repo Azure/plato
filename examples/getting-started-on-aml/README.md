@@ -1,7 +1,7 @@
-# Simple Adder Sample
+# Getting Started on AML
 
 In this folder we show how to get started training an RL agent on Azure ML
-with a custom Gymnasium environment.
+with a custom Gymnasium environment ("Simple Adder").
 
 ### What this sample covers
 
@@ -26,7 +26,7 @@ pip install azure-cli
 az extension add -n ml
 ```
 - [Create an AML workspace and compute cluster](https://azure.github.io/plato/#create-azure-resources)
-- Create an AML environment using the conda file provided ``conda.yml``:
+- Create an AML environment using the conda file provided: ``conda.yml`` by running the following command:
 ```bash
 az ml environment create --name aml-environment --conda-file conda.yml --image mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04 --resource-group $YOUR_RESOURCE_GROUP --workspace-name $YOUR_WORKSPACE
 ```
@@ -40,10 +40,10 @@ to decrease.
 During training, the agent learns to adjust the addend action to achieve a
 state value of 50.
 
-## Run the experiment
+## Run Locally
 
 As a preliminary step, you should check that the simulation works on your
-local machine. In this way you'll save precious development time.
+local machine to save precious development time.
 The ``main.py`` script in the ``src`` folder allows you to test locally with
 the following command:
 
@@ -51,10 +51,11 @@ the following command:
 python main.py --test-local
 ```
 
+## Tutorial: Run on AML
 After you checked that the simulation works properly, follow these steps to
 train an RL agent on AML:
 
-1. Modify the ``job.yml`` file by changing the name of the ``environment``
+1. Modify the ``job.yml`` file by changing the name of the AML ``environment``
    and ``compute`` to be the same as those you created in the prerequisites
    section.
 
@@ -67,8 +68,8 @@ az ml job create -f job.yml --workspace-name $YOUR_WORKSPACE --resource-group $Y
    studio](https://ml.azure.com/). You should see that ``ray`` is writing
    logs in the *Outputs + logs* tab in the ``user_logs`` folder.
 
-4. Once the job is completed, the model checkpoints can be found in [AML
-   studio](https://ml.azure.com/) under the *Outputs + Logs* tab of your job
+4. Once the job is completed, the model checkpoints can also be found in AML
+   studio under the *Outputs + Logs* tab of your job
    in the ``outputs`` folder.
 
 ## Next Steps
