@@ -2,23 +2,28 @@
 
 This folder demonstrates an example of using MLFlow to log models and data with AzureML.
 
-## How to Run
+### What this sample covers
 
-The source for running the experiment is under `src/mlflow_run.py`. The script defines a single function: `run()` which can be run locally or on AzureML using the `Ray-on-AML` library.
+- How to optimize the training algorithm for best performance
+- How to visualize the performance of the agent
 
-### Run Locally
+### What this sample does not cover
 
-You can run the script locally for testing and experimentation. The `smoke-test` option ensures each run is only for a single training iteration to save time.
+- How to evaluate the agent
+- How to deploy the agent
 
-```bash
-python mlflow_run.py --test-local --smoke-test
-```
 
 ## Prerequisites
 
-- Install the Azure CLI and the ML extension
-- Create an AML workspace
-- Create a compute cluster in your AML workspace
+- Install the Azure CLI on your machine:
+```
+pip install azure-cli
+```
+- Add the ML extension:
+```
+az extension add -n ml
+```
+- [Create an AML workspace and compute cluster](https://azure.github.io/plato/#create-azure-resources)
 - Create an AML environment using the conda file provided: ``conda.yml`` by running the following command:
 
 ```bash
@@ -27,24 +32,42 @@ az ml environment create --name ray-mlflow-env --conda-file conda.yml --image mc
 
 Note that the environment in this sample is slightly different than the previous sample, so you will need to create a new environment.
 
-## Run the Job on AML
+## What is being "simulated"?
+This example uses the classic ["CartPole-v1"](https://gymnasium.farama.org/environments/classic_control/cart_pole/) simulation environment. The example runs Ray Tune's [population based training (PBT)](https://docs.ray.io/en/latest/_modules/ray/tune/schedulers/pbt.html) to simultaneously train and optimize a group of agents - regularly testing the agents, replicating the top performers, and perturbing their hyperparameters. The MLflow integration allows logging of all artifacts produced by Ray Tune, such as the model checkpoints, to MLflow.
 
-To run the experiment, you can use the included ``job.yml``. The file
-defines all parameters needed to successfully launch the job. Please
-remember to change the name of the ``environment`` and ``compute`` to be the
-same as those you created in the prerequisites section. Please see the provided ``job.yml`` for an example.
-Note that the `environment` parameter has a prefix `azureml` and a suffix with the version, in this case `@latest`. Please refer to the [Azure Machine Learning](https://learn.microsoft.com/en-us/azure/machine-learning/reference-yaml-job-command?view=azureml-api-2) docs for more information.
+## Run Locally
+The source for running the experiment is under `src/mlflow_run.py`. The script defines a single function: `run()` which can be run locally or on AzureML.
 
-Launch the experiment using the Azure CLI and the `ml` extension:
+You can run the script locally for testing and experimentation. The `smoke-test` option ensures each run is only for a single training iteration to save time.
 
 ```bash
-az ml job create -f job.yml --workspace-name $YOUR_WORKSPACE --resource-group $YOUR_RESOURCE_GROUP
+python mlflow_run.py --test-local --smoke-test
 ```
 
-## Monitor Your Job
+## Tutorial: Run on AML
 
-After submitting your experiment using the Azure CLI and your yaml file, AML will create an experiment and spin up multiple jobs, one for each sweep over your hyperparameter space. You can monitor the jobs on the AML studio website by locating your experiment. The experiment should be listed under the display name of your `yaml` file above. If you have hyperparameter tuning enabled, you will see separate model files for each run under the *Outputs + logs*. You can also view the metrics for each job in the experiment under the *Metrics* tab.
+1. Modify the ``job.yml`` file by changing the name of the AML ``environment``
+   and ``compute`` to be the same as those you created in the prerequisites
+   section.
+    - Note that the `environment` parameter has a prefix `azureml` and a suffix with the version, in this case `@latest`. Refer to the [Azure Machine Learning](https://learn.microsoft.com/en-us/azure/machine-learning/reference-yaml-job-command?view=azureml-api-2) docs for more information.
 
-## Download Model Files for Local Testing
+2. Launch the experiment using the Azure CLI `ml` extension:
 
-Upon completion of your experiment, you can download the model files to your local machine for testing and assessment. The script `get_mlflow_artifacts.py` provides function for querying your MLFlow registry on AzureML and downloads the top performing policy to your local machine. In order to run this script, first create a [workspace configuration file](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-environment?view=azureml-api-2#local-and-dsvm-only-create-a-workspace-configuration-file) in your local directory to run this script.
+    ```bash
+    az ml job create -f job.yml --workspace-name $YOUR_WORKSPACE --resource-group $YOUR_RESOURCE_GROUP
+    ```
+
+    - After submitting your experiment using the Azure CLI and your yaml file, AML will create an experiment and spin up multiple jobs, one for each sweep over your hyperparameter space.
+
+3. Monitor the jobs on the [AML studio website](https://ml.azure.com/) by locating your experiment, which is listed under the display name of your `job.yml` file above.
+    - If you have hyperparameter tuning enabled, you will see separate model files for each run under *Outputs + logs*.
+    - You can also view the metrics for each job in the experiment under the *Metrics* tab.
+
+4. Upon completion, download the model files to your local machine using the script `get_mlflow_artifacts.py`. This script allows you to query your MLFlow registry on AzureML and download the top performing policy.
+    - In order to run this script, first create a [workspace configuration file](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-environment?view=azureml-api-2#local-and-dsvm-only-create-a-workspace-configuration-file) in your local directory.
+
+## Next Steps
+Now that you understand how to use MLflow to log models, you can:
+- Optimize the hyperparameter tuning process with different search algorithms and spaces.
+- Evaluate your best performing model on new episodes or metrics.
+- Deploy your model to production or serve them on Azure.

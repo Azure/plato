@@ -1,7 +1,18 @@
-# Deploy a trained agent
+# Deploy a Trained Agent
 
 This sample shows how to deploy a trained agent using ``ray``'s module
 ``serve``.
+
+### What this sample covers
+
+- How to serve the agent locally
+- How to package and deploy the agent with Docker
+
+### What this sample does not cover
+
+- How to train the agent
+- How to visualize the performance of the agent
+- How to evaluate the agent
 
 ## Prerequisites
 
@@ -12,73 +23,59 @@ This sample shows how to deploy a trained agent using ``ray``'s module
 
 ## Tutorial
 
-### Step 1: Download the checkpoints locally
+1. Download the checkpoints locally to the ``checkpoints`` folder.
 
-Download the model checkpoints to the ``checkpoints`` folder.
+2. Modify the deployment script at ``src/serve.py``. Please adapt the script to your setup as follows:
+    - Change the variable ``CHECKPOINT_FOLDER`` to the name of the folder containing your RLlib checkpoints.
+    - Please note that ``CHECKPOINT_FOLDER`` must be the name of the folder inside ``checkpoints`` that contains the trained agent.
+    - Modify the `observation_space` and `action_space` variables to be the same as in your simulation environment used for training the agent.
 
-### Step 2: Modify the deployment script
+3. Change package versions in `requirements.txt` to match your training environment.
+    - For example, if your training environment has ray==2.3.0 and this file has ray==2.4.0, you need to change it to ray==2.3.0.
 
-You can find the deployment script at ``src/serve.py``.
-Please adapt the script to your setup as follows:
+4. Test locally:
+    - Install the required dependencies:
 
-- Change the variable ``CHECKPOINT_FOLDER`` to the name of the folder containing your RLlib checkpoints.
-  - Please note that
-``CHECKPOINT_FOLDER`` must be the name of the folder inside ``checkpoints``
-that contains the trained agent.
-- Modify the `observation_space` and `action_space` variables to be the same as in your simulation environment used for training the agent.
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-### Step 3: Change package versions to align with your training environment
+    - Serve the agent locally by running the following command in the
+  ``src`` folder:
 
-The `requirements.txt` file lists the Python packages needed to deploy your agent. You need to edit the versions in this file to match your agent training environment. For example, if your training environment has ray==2.3.0 and this file has ray==2.4.0, you need to change it to ray==2.3.0.
+    ```bash
+    serve run serve:agent
+    ```
 
-### Step 4: Test locally
+    - You can now reach the agent at ``http://localhost:8000``. For example, use the
+    following snippet to get the action from the agent:
 
-First, install the required dependencies:
+    ```python
+    import requests
+    resp = requests.get('http://localhost:8000', json={'state':{'value': 5}})
+    print(resp.json)
+    ```
 
-```bash
-pip install -r requirements.txt
-```
+    - Or, try the following cURL command in your terminal:
 
-Then, test the agent locally by running the following command in the
-``src`` folder:
+    ```
+    curl --request POST --url "http://localhost:8000/" --data '{"state":{"value": 5}}'
+    ```
 
-```bash
-serve run serve:agent
-```
+5. (OPTIONAL) Package and deploy the agent locally:
+    - Use the included ``Dockerfile`` for packaging the agent. If you have Docker installed locally, build the agent by running the following command in this folder:
 
-You can reach the agent at ``http://localhost:8000``. For example, use the
-following snippet to get the action from the agent:
+    ```bash
+    docker build -t rl-agent .
+    ```
 
-```python
-import requests
-resp = requests.get('http://localhost:8000', json={'state':{'value': 5}})
-print(resp.json)
-```
+    - You can then use the image ``rl-agent`` and deploy the brain locally via docker:
 
-Or, try the following cURL command in your terminal:
+    ```bash
+    docker run -p 8000:8000 rl-agent
+    ```
 
-```
-curl --request POST --url "http://localhost:8000/" --data '{"state":{"value": 5}}'
-```
-
-### (Optional) Step 5: Package and deploy the agent locally
-
-Use the included ``Dockerfile`` for packaging the agent. If you have Docker installed locally, you can build the agent and test that
-it works.
-To build the agent run the following command in this folder
-
-```bash
-docker build -t rl-agent .
-```
-
-You can then use the image ``rl-agent`` locally and deploy the brain locally
-via docker:
-
-```bash
-docker run -p 8000:8000 rl-agent
-```
-
-To ensure that the agent responds correctly, use the same requests or cURL commands shown in Step 4 (*Test locally*).
+    - To ensure that the agent responds correctly, use the same requests or cURL commands shown in Step 4 (*Test locally*).
 
 ## Next Steps
 After you have containerized your RL agent, you can:
