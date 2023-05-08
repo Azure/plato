@@ -9,7 +9,7 @@ from ray.tune.schedulers import PopulationBasedTraining
 from ray_on_aml.core import Ray_On_AML
 
 
-def run() -> tune.ResultGrid:
+def run(env_name: str = "CartPole-v1") -> tune.ResultGrid:
     """Run Ray Tune with MLflow on AzureML or locally.
     This is an example of using Ray Tune and MLflow with Ray on AzureML.
     It is based on the PBT example from the Ray Tune documentation:
@@ -89,7 +89,7 @@ def run() -> tune.ResultGrid:
             num_samples=1 if args.smoke_test else 10,
         ),
         param_space={
-            "env": "CartPole-v1",
+            "env": env_name,
             "kl_coeff": 1.0,
             "num_workers": 4,
             "num_cpus": 1,  # number of CPUs to use per trial
@@ -130,6 +130,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--test-local", action="store_true", help="Test locally. If false runs on AML"
     )
+    parser.add_argument(
+        "--env-name", type=str, default="CartPole-v1", help="Environment to use"
+    )
     args, _ = parser.parse_known_args()
 
     if not args.test_local:
@@ -141,9 +144,9 @@ if __name__ == "__main__":
             ray.init(address="auto")
             print(ray.cluster_resources())
 
-            run()
+            run(args.env_name)
         else:
             print("in worker node")
 
     else:
-        run()
+        run(args.env_name)
