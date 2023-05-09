@@ -1,0 +1,4 @@
+bonsai_api_url: "127.0.0.15"
+bonsai_api_port: 443
+workspaceId: "generic-workspace-id"
+accesskey: "unused-password"
