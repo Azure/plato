@@ -33,7 +33,12 @@ def list_experiments(path: Optional[str] = None) -> List:
     return experiments
 
 
-def get_top_run(experiment_name: str, save_path: str, path: Optional[str] = None):
+def get_top_run(
+    experiment_name: str,
+    save_path: str,
+    path: Optional[str] = None,
+    rank_metric: str = "metrics.episode_reward_mean",
+):
     """Get top run from AzureML MLFlow experiment and download
     model artifacts locally.
 
@@ -59,8 +64,8 @@ def get_top_run(experiment_name: str, save_path: str, path: Optional[str] = None
     mlflow.set_tracking_uri(mlflow_tracking_uri)
 
     runs = mlflow.search_runs(experiment_names=[experiment_name])
-    top_run_id = runs.sort_values(by="metrics.episode_reward_max", ascending=False)[
-        ["run_id", "metrics.episode_reward_max"]
+    top_run_id = runs.sort_values(by=rank_metric, ascending=False)[
+        ["run_id", rank_metric]
     ]["run_id"].values[0]
     client = mlflow.tracking.MlflowClient()
     artifacts = client.list_artifacts(top_run_id)
@@ -87,6 +92,5 @@ if __name__ == "__main__":
     # from ray.rllib.algorithms.algorithm import Algorithm
     # model = Algorithm.from_checkpoint(local_path)
 
-    # shutdown ray to release resources
     # import ray
     # ray.shutdown()

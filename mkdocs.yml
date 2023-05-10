@@ -2,7 +2,17 @@ site_name: PlatoTK
 site_url: http://127.0.0.1:8000/
 nav:
     - Home: index.md
-    - User Guides: user_guides.md
+    - User Guides:
+        - Monitoring and Logging with MLFlow: 'user_guides/monitoring-mlflow.md'
     - Glossary: glossary.md
 theme:
     name: readthedocs
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
