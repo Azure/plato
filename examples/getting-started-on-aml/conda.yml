@@ -8,7 +8,6 @@ dependencies:
    # Dependencies for Ray on AML
    - azureml-mlflow
    - azureml-defaults
-   - ray-on-aml
    - ray[data]==2.3.0
    - ray[rllib]==2.3.0
    # Deps for RLlib

@@ -9,7 +9,7 @@ experiment_name: first-aml-job
 description: Run your first AML job.
 # Needed for using ray on AML
 distribution:
-   type: mpi
+   type: ray
 # Modify the following and num_rollout_workers in main to use more workers
 resources:
   instance_count: 1

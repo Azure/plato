@@ -10,7 +10,6 @@ import sys
 from ray.rllib.algorithms.ppo import PPOConfig
 from ray.tune.logger import pretty_print
 from ray.tune.registry import register_env
-from ray_on_aml.core import Ray_On_AML
 from sim import SimpleAdder as SimEnv
 
 # Register the simulation as an RLlib environment.
@@ -45,17 +44,4 @@ if __name__ == "__main__":
     parser.add_argument("--test-local", action="store_true", default=False)
     args = parser.parse_args()
 
-    if args.test_local:
-        train(args.test_local)
-        sys.exit()
-
-    ray_on_aml = Ray_On_AML()
-    ray = ray_on_aml.getRay()
-
-    if ray:
-        print("head node detected")
-        ray.init(address="auto")
-        print(ray.cluster_resources())
-        train(args.test_local)
-    else:
-        print("in worker node")
+    train(args.test_local)
