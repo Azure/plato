@@ -4,6 +4,7 @@ nav:
     - Home: index.md
     - User Guides:
         - Hyperparameter Tuning: 'user_guides/hyperparameter-tuning.md'
+        - Monitoring and Logging with MLFlow: 'user_guides/monitoring-mlflow.md'
     - Glossary: glossary.md
 theme:
     name: readthedocs
