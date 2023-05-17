@@ -11,7 +11,7 @@ experiment_name: mlflow_pbt_monitor
 description: Integrating MLFlow with AML.
 # Needed for using ray on AML
 distribution:
-   type: mpi
+   type: ray
 # Modify the following and num_rollout_workers in main to use more workers
 resources:
   instance_count: 10

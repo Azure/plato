@@ -6,7 +6,6 @@ from mlflow.utils.mlflow_tags import MLFLOW_PARENT_RUN_ID
 from ray import air, tune
 from ray.air.integrations.mlflow import MLflowLoggerCallback
 from ray.tune.schedulers import PopulationBasedTraining
-from ray_on_aml.core import Ray_On_AML
 
 
 def run(num_tune_samples: int = 10, env_name: str = "CartPole-v1") -> tune.ResultGrid:
@@ -178,18 +177,4 @@ if __name__ == "__main__":
     )
     args, _ = parser.parse_known_args()
 
-    if not args.test_local:
-        ray_on_aml = Ray_On_AML()
-        ray = ray_on_aml.getRay()
-
-        if ray:
-            print("head node detected")
-            ray.init(address="auto")
-            print(ray.cluster_resources())
-
-            run(args.num_tune_samples)
-        else:
-            print("in worker node")
-
-    else:
-        run(args.num_tune_samples)
+    run(args.num_tune_samples)
