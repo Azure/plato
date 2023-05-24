@@ -12,6 +12,10 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+    "gymnasium",
+    "numpy",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/Azure/plato"
