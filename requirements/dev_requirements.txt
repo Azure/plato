@@ -47,5 +47,9 @@ tomli==2.0.1
     #   black
     #   mypy
     #   pytest
+types-requests==2.31.0.1
+    # via -r requirements/dev_requirements.in
+types-urllib3==1.26.25.13
+    # via types-requests
 typing-extensions==4.5.0
     # via mypy
