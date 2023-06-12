@@ -104,7 +104,9 @@ In ``src/sim.py``:
 - In ``SimWrapper.__init__``: modify ``self.action_space`` to be the possible
   actions, modify ``self.observation_space`` to contain all states that the
   agent has access to, and modify ``self.config`` in order to pass the config
-  needed by the sim.
+  needed by the sim. Please note that ``self.observation_space`` corresponds
+  to Bonsai's [observable
+  state](https://learn.microsoft.com/en-us/bonsai/inkling/keywords/state#state-transform-functions)
 - Modify ``SimWrapper.reward`` in ``src/sim.py`` by adapting it to the
   problem you want to solve.
 - Modify ``SimWrapper.terminal`` in ``src/sim.py`` to return ``True`` when
