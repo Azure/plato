@@ -9,10 +9,9 @@ dependencies:
    - azureml-mlflow
    - azureml-defaults
    - ray-on-aml
-   - ray[data]==2.3.0
-   - ray[rllib]==2.3.0
+   - ray[data,rllib]==2.5.0
    # Deps for RLlib
-   - tensorflow==2.11.1
+   - torch==2.0.1
    # Dependencies for the Simple Adder
    - gymnasium==0.26.3
-   - numpy==1.24.2
+   - numpy==1.24.3
