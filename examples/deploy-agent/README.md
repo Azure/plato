@@ -29,6 +29,8 @@ This sample shows how to deploy a trained agent using ``ray``'s module
     - Change the variable ``CHECKPOINT_FOLDER`` to the name of the folder containing your RLlib checkpoints.
     - Please note that ``CHECKPOINT_FOLDER`` must be the name of the folder inside ``checkpoints`` that contains the trained agent.
     - Modify the `observation_space` and `action_space` variables to be the same as in your simulation environment used for training the agent.
+    - Change value of the ``name_env`` and make it equal to the one used for
+      registering the simulation environment at training.
 
 3. Change package versions in `requirements.txt` to match your training
    environment. Pay particular attention to the ``ray``, ``tensorflow``,
