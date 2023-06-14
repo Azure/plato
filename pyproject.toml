@@ -13,6 +13,11 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+dependencies = [
+    "gymnasium == 0.26.3",  # Required by ray
+    "ray[rllib, tune] >= 2.3, <2.6",
+]
+
 [project.urls]
 "Homepage" = "https://github.com/Azure/plato"
 "Bug Tracker" = "https://github.com/Azure/plato"
