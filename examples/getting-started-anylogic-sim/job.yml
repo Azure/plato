@@ -1,0 +1,15 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+code: src
+command: >-
+  ./start.sh
+environment: azureml:anylogic-env@latest
+compute: azureml:env-medium
+display_name: anylogic-sim
+experiment_name: anylogic-sim
+description: Run a Bonsai Anylogic sim on AML.
+# Needed for using ray on AML
+distribution:
+   type: mpi
+# Modify the following and num_rollout_workers in main to use more workers
+resources:
+  instance_count: 1

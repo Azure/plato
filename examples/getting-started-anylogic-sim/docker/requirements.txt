@@ -1,0 +1,12 @@
+aiocache[memcached]==0.12.1
+azure-ai-ml==1.7.2
+azureml-core==1.51.0
+azureml-defaults==1.51.0
+azureml-mlflow==1.51.0
+fastapi==0.95.2
+git+https://github.com/Azure/plato.git@main
+gymnasium==0.26.3
+gunicorn==20.1.0
+ray[air,default,rllib]==2.4.0
+ray_on_aml==0.2.4
+torch==2.0.1

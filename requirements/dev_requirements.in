@@ -3,3 +3,4 @@ flake8
 isort
 mypy
 pytest
+types-requests

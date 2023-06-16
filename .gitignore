@@ -151,3 +151,6 @@ etc/
 
 # Ray checkpoints
 **/checkpoint_*/
+
+# Exported anylogic sim
+exported/
