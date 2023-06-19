@@ -7,6 +7,6 @@ fastapi==0.95.2
 git+https://github.com/Azure/plato.git@main
 gymnasium==0.26.3
 gunicorn==20.1.0
-ray[air,default,rllib]==2.4.0
+ray[air,default,rllib]==2.5.0
 ray_on_aml==0.2.4
 torch==2.0.1
