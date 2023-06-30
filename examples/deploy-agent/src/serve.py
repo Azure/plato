@@ -1,11 +1,12 @@
+import json
 from pathlib import Path
 
 import gymnasium.spaces as spaces
 import numpy as np
 from ray import serve
 
-from platotk.restore import restore_agent
-from platotk.serialize import check_and_transform
+from platotk.restore import restore_agent_from_pickle
+from platotk.serialize import GymEncoder, check_and_transform
 
 # The name of the folder where the checkpoints are located in the checkpoints/ folder
 # IMPORTANT: Remember to change it
@@ -33,16 +34,26 @@ def prepare_path(checkpoint_folder):
 class ServeAgent:
     def __init__(self):
         check_path = prepare_path(CHECKPOINT_FOLDER)
-        self.agent = restore_agent(
+        self.check_path = check_path
+        self.agent = restore_agent_from_pickle(
             observation_space, action_space, check_path, name_env
         )
 
     async def __call__(self, request):
+        """
+        Respond with an action to a request containing a state.
+
+        The try-except block is needed because with ``ray==2.5.0`` the agent
+        restored from the pickle is None and computing single action does not
+        work. With this workaround we can support multiple ray's versions.
+        """
         json_input = await request.json()
         state = check_and_transform(observation_space, json_input["state"])
         # Set explore to false or the agent will not be deterministic
         action = self.agent.compute_single_action(state, explore=False)
-        return action
+        # In order to properly format scalar as scalar and not as singleton-lists
+        action_formatted = json.loads(json.dumps(action, cls=GymEncoder))
+        return action_formatted
 
 
 agent = ServeAgent.bind()  # type: ignore
