@@ -206,6 +206,6 @@ async def advance_session(workspace_id: str, session_id: str, request: Request):
             log.debug("Reading for method timed out.")
             pass
         if method is not None:
+            await sim_state.unset("method")
             break
-
     return await method_dispatch(req, method)
