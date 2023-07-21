@@ -1,0 +1,26 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+code: src
+command: >-
+  python main.py --checkpoint-folder ${{inputs.checkpoint_folder}} --input-json ${{inputs.input_json}}
+
+
+inputs:
+  checkpoint_folder:
+    type: uri_folder
+    path: ./checkpoints/checkpoint_000010
+    mode: download
+  input_json:
+    type: uri_file
+    path: ./init_conditions.json
+    mode: download
+environment: azureml:aml-environment@latest
+compute: azureml:env-medium
+display_name: custom-assessment-aml
+experiment_name: custom-assessment-aml
+description: Run a custom assessment on AML
+# Needed for using ray on AML
+distribution:
+  type: mpi
+# Modify the following and num_workers in main to change the number of workers
+resources:
+  instance_count: 4
