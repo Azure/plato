@@ -80,20 +80,35 @@ class EpisodeRunner:
             pd.DataFrame: The dataframe containing the states, actions, episode id,
             step number, and initial condition.
         """
-        df = pd.concat([pd.DataFrame(dict) for dict in [states, actions]], axis=1)
-        # Prepend "state_" to state columns and "action_" to action columns for clarity
-        df.rename(
-            columns=lambda x: "action_" + x if x in actions else "state_" + x,
-            inplace=True,
-        )
-        for key, value in self.initial_condition.items():
-            df["config_" + key] = value
+        # Create a dictionary for the results. Prepend "state_" to state columns.
+        df = pd.DataFrame(states).add_prefix("state_")
+
+        # Add action columns
+        df = pd.concat([df, pd.DataFrame(actions).add_prefix("action_")], axis=1)
+
+        # Add initial condition columns
+        # Check the type of the initial_condition argument
+        if isinstance(self.initial_condition, dict):  # If it is a dictionary
+            # Use the dictionary keys and values to create new columns
+            df[[f"config_{k}" for k in self.initial_condition.keys()]] = list(
+                self.initial_condition.values()
+            )
+        elif isinstance(self.initial_condition, list):  # If it is a list
+            # Use the list index and values to create new columns
+            df[
+                [f"config_{i}" for i in range(len(self.initial_condition))]
+            ] = self.initial_condition
+        else:  # If it is neither a list nor a dictionary
+            # Raise an exception
+            raise TypeError("The config argument must be a list or a dictionary")
+
+        # Add reward, terminated, truncated, episode id, and step id columns
         df["reward"] = pd.Series(rewards)
         df["reward_cumsum"] = df["reward"].cumsum()
         df["terminated"] = pd.Series(terminated)
         df["truncated"] = pd.Series(truncated)
         df["episode_id"] = self.episode_id
-        df["step_id"] = pd.Series(np.arange(n_steps, dtype=int))
+        df["step_id"] = pd.Series(np.arange(n_steps + 2, dtype=int))
 
         return df
 
@@ -132,7 +147,11 @@ class EpisodeRunner:
         # Test for max_steps
         for step in range(self.max_steps):
             # Get full current state and save it
-            full_state = self.sim.state.copy()
+            full_state = (
+                self.sim.state.copy()
+                if type(self.sim.state) == dict
+                else self.sim.state
+            )
             states.append(full_state)
             # Compute action based on current state
             action = self.agent.compute_single_action(observable_state, explore=False)
@@ -147,7 +166,10 @@ class EpisodeRunner:
                 # If the episode is terminated or truncated, break the loop
                 break
         # Save the final state
-        states.append(self.sim.state.copy())
+        full_state = (
+            self.sim.state.copy() if type(self.sim.state) == dict else self.sim.state
+        )
+        states.append(full_state)
         return self.episode_to_df(states, actions, rewards, terminated, truncated, step)
 
 
