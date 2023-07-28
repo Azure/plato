@@ -1,7 +1,7 @@
 # Custom Assessments on AML
 
 In this folder, we show how to run custom assessment episodes with a trained RL agent on Azure ML
-with a custom Gymnasium environment ("Simple Adder").
+with a custom Gymnasium environment.
 
 ### What this sample covers
 
@@ -18,19 +18,20 @@ with a custom Gymnasium environment ("Simple Adder").
 
 - You have a trained agent available (for example, you followed our tutorial `getting-started-on-aml`)
 - You have the simulation environment used for training the agent available.
+- You have the Python environment used for training the agent available.
 - (Optional) To run assessments on AML instead of locally, you will need to install the [Azure CLI (with the ML extension)](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-cli?view=azureml-api-2&tabs=public) and an [AML environment](https://azure.github.io/plato/#aml-environment-setup) with the same Python and package versions you used for training the agent.
 
 ## Example Overview
 
-This example shows how to run custom assessments on a trained agent using Ray and AML. The example uses the "Simple Adder" simulation environment and a trained agent from the `getting-started-on-aml` example. The simulation environment is modified to enable custom episode configurations via the _options_ parameter in [gymnasium.Env.reset()](https://gymnasium.farama.org/api/env/#gymnasium.Env.reset). Ray is then used to run parallel assessments on different episode configurations, either locally or on AML. The assessment results are saved to a CSV file for further analysis and visualization.
+This example shows how to run custom assessments on a trained agent using Ray and AML. The example uses the `SimpleAdder` simulation environment and a trained agent from the `getting-started-on-aml` example. The simulation environment is modified to enable custom episode configurations via the _options_ parameter in [gymnasium.Env.reset()](https://gymnasium.farama.org/api/env/#gymnasium.Env.reset). The Ray Remote API is then used to run parallel assessments on different episode configurations, either locally or on AML. The assessment results are saved to a CSV file for further analysis and visualization.
 
 ## Tutorial
 
-1. Add the simulation environment to `./scr/sim.py` and modify the `reset()` method to pass episode configurations via the _options_ input parameter.
+1. Add the simulation environment to `./scr/sim.py` and modify the `reset()` method to pass episode configurations via the _options_ input parameter. We have provided an example of this using the `SimpleAdder` simulation from our `getting-started-on-aml` tutorial.
 
-2. Add the episode configurations to `./init_conditions.json`.
+2. Add the episode configurations to `./init_conditions.json`. The current file contains initial conditions for the `SimpleAdder` simulation environment.
 
-3. Download the agent checkpoints locally to the ``./checkpoints`` folder.
+3. Download the trained agent checkpoints locally to the ``./checkpoints`` folder.
 
 4. To test locally, activate the Python environment you used to train the agent, and run the following command in the `./src` folder:
 
@@ -39,7 +40,9 @@ python main.py --test-local
 ```
 WARNING: Running custom assessments locally may overload your machine depending on various factors, such as the specifications of your machine, the simulation environment complexity, the assessment size and duration, the data and model size, etc. You can adjust the number of Ray workers or run the code on AML to avoid this.
 
-5. (Optional) To run on AML, follow these steps:
+- Once the job is complete, you can find the assessment logs in `outputs\assessment_logs.csv`.
+
+5. (__Optional__) To run on AML, follow these steps:
 
 - Modify the ``job.yml`` file by changing the name of the AML ``environment`` and ``compute`` to be the same as those you created in the prerequisites section. Also, please modify the paths for ``checkpoint_folder`` and ``input_json`` if they are different.
 
@@ -57,4 +60,4 @@ az ml job create -f job.yml --workspace-name $YOUR_WORKSPACE --resource-group $Y
    in the ``outputs`` folder.
 
 ## Next Steps
-Now that you've run assessment episodes for your trained agent, you can calculate custom metrics that are relevant to your problem domain and measure key performance indicators (KPIs) that reflect your agent’s goals and objectives. You can also visualize the data to gain insights into your agent’s behavior and identify areas for improvement.
+Now that you've logged assessment episodes for your trained agent, you can calculate custom metrics that are relevant to your problem domain and measure key performance indicators (KPIs) that reflect your agent’s goals and objectives. You can also visualize the data to gain insights into your agent’s behavior and identify areas for improvement.
