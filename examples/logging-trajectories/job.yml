@@ -1,0 +1,20 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+code: src
+command: >-
+  python main.py --storage-path ${{outputs.output_data}}
+environment: azureml:aml-environment@latest
+compute: azureml:env-medium
+outputs:
+  output_data:
+    mode: rw_mount
+    path: azureml://datastores/workspaceblobstore/paths/trajectories
+    type: uri_folder
+display_name: logging-trajectories
+experiment_name: logging-trajectories
+description: Log episodes trajectories in a Datastore.
+# Needed for using ray on AML
+distribution:
+   type: mpi
+# Modify the following and num_rollout_workers in main to use more workers
+resources:
+  instance_count: 1
