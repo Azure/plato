@@ -10,6 +10,7 @@ Instead, we will use RLlib’s checkpointing mechanism to save and load the
 Algorithm state for each worker.
 """
 import argparse
+import copy
 import json
 import os
 import pickle
@@ -147,11 +148,7 @@ class EpisodeRunner:
         # Test for max_steps
         for step in range(self.max_steps):
             # Get full current state and save it
-            full_state = (
-                self.sim.state.copy()
-                if type(self.sim.state) == dict
-                else self.sim.state
-            )
+            full_state = copy.deepcopy(self.sim.state)
             states.append(full_state)
             # Compute action based on current state
             action = self.agent.compute_single_action(observable_state, explore=False)
