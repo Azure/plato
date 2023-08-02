@@ -1,5 +1,6 @@
 git+https://github.com/Azure/plato.git@main
 gymnasium==0.26.3
 numpy==1.24.3
+pydantic<2
 ray[default,rllib,serve]==2.5.0
 torch==2.0.1
