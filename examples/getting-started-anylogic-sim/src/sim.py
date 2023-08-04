@@ -1,4 +1,7 @@
 import json
+import subprocess
+import time
+from pathlib import Path
 
 import requests
 from gymnasium import Env, spaces
@@ -26,6 +29,24 @@ class SimWrapper(Env):
             "arrivalRate": 0.5,
             "sizeBufferQueues": 45,
         }
+        self.start_anylogic_sim()
+
+    def start_anylogic_sim(self):
+        scripts = [script for script in Path(__file__).parent.rglob("*_linux.sh")]
+        if len(scripts) > 1:
+            raise RuntimeError(f"Too many Anylogic sims found: {scripts}")
+        elif len(scripts) < 1:
+            raise RuntimeError("No Anylogic sim found.")
+
+        sim_exec = scripts.pop()
+        penv = {
+            "SIM_API_HOST": "http://localhost:8000",
+            "SIM_CONTEXT": "{}",
+            "SIM_WORKSPACE": "dummy",
+            "SIM_ACCESS_KEY": "dummy",
+        }
+        subprocess.Popen([sim_exec], env=penv)
+        time.sleep(10)
 
     def reset(self, *, seed=None, options=None):
         log.debug("Reset send.")
