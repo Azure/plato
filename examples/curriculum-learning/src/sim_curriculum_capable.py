@@ -65,7 +65,7 @@ class SimpleAdder(TaskSettableEnv):
 
     def step(self, action):
         """Advance one iteration by applying the given ``action``."""
-        self.state["value"] += action["addend"]
+        self.state["value"] += action["addend"].item()
         self.iter += 1
         reward = self.reward(self.state)
         terminated = self.state["value"] == 50
