@@ -23,6 +23,11 @@ This sample shows how to deploy a trained agent using ``ray``'s module
 
 ## Tutorial
 
+Follow these steps to build and test a Docker image with your trained agent.
+Please note that if you run Docker on Windows you should first switch to
+Linux containers. Please find instructions
+[here](https://docs.docker.com/desktop/faqs/windowsfaqs/#how-do-i-switch-between-windows-and-linux-containers)
+
 1. Download the checkpoints locally to the ``checkpoints`` folder.
 
 2. Modify the deployment script at ``src/serve.py``. Please adapt the script to your setup as follows:
@@ -37,36 +42,7 @@ This sample shows how to deploy a trained agent using ``ray``'s module
    ``torch``, ``numpy`` versions you have in the training environment and
    specify the same versions in ``requirements.txt``.
 
-4. Test locally:
-    - Install the required dependencies:
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-    - Serve the agent locally by running the following command in the
-  ``src`` folder:
-
-    ```bash
-    serve run serve:agent
-    ```
-
-    - You can now reach the agent at ``http://localhost:8000``. For example, use the
-    following snippet to get the action from the agent:
-
-    ```python
-    import requests
-    resp = requests.get('http://localhost:8000', json={'state':{'value': 5}})
-    print(resp.json)
-    ```
-
-    - Or, try the following cURL command in your terminal:
-
-    ```
-    curl --request POST --url "http://localhost:8000/" --data '{"state":{"value": 5}}'
-    ```
-
-5. (OPTIONAL) Package and deploy the agent locally:
+4. Package and deploy the agent locally:
     - Use the included ``Dockerfile`` for packaging the agent. If you have Docker installed locally, build the agent by running the following command in this folder:
 
     ```bash
@@ -79,8 +55,22 @@ This sample shows how to deploy a trained agent using ``ray``'s module
     docker run -p 8000:8000 rl-agent
     ```
 
-    - To ensure that the agent responds correctly, use the same requests or cURL commands shown in Step 4 (*Test locally*).
+    - You can now reach the agent at ``http://localhost:8000``. For example, use the
+    following snippet to get the action from the agent (the `state` is for
+    the Simple Adder environment. If you use a different one, please modify
+    accordingly):
 
+    ```python
+    import requests
+    resp = requests.get('http://localhost:8000', json={'state':{'value': 5}})
+    print(resp.json)
+    ```
+
+    - Or, try the following cURL command in your terminal:
+
+    ```
+    curl --request POST --url "http://localhost:8000/" --data '{"state":{"value": 5}}'
+    ```
 ## Next Steps
 After you have containerized your RL agent, you can:
 
