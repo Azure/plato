@@ -1,4 +1,8 @@
 import json
+import os
+import subprocess
+import time
+from pathlib import Path
 
 import requests
 from gymnasium import Env, spaces
@@ -6,12 +10,13 @@ from gymnasium import Env, spaces
 from platotk.logger import log
 from platotk.serialize import GymEncoder, check_and_transform
 
-BASE_URL = "http://localhost:8000"
-
 
 class SimWrapper(Env):
     def __init__(self, env_config):
-        self.base_url = BASE_URL
+        self.base_host = "localhost"
+        self.env_id = int(f"{env_config.worker_index}{env_config.vector_index}")
+        self.base_port = 8000 + self.env_id
+        self.base_url = f"http://{self.base_host}:{self.base_port}"
 
         self.action_space = spaces.Dict(
             {
@@ -26,6 +31,47 @@ class SimWrapper(Env):
             "arrivalRate": 0.5,
             "sizeBufferQueues": 45,
         }
+        self.start_sim_framework()
+
+    @staticmethod
+    def find_unique_port(worker, vector):
+        return 8000 + int(f"{worker}{vector}")
+
+    def start_sim_framework(self):
+        """Start Baobab API and external sim."""
+
+        # Find the sim executable
+        scripts = [script for script in Path(__file__).parent.rglob("*_linux.sh")]
+        if len(scripts) > 1:
+            raise RuntimeError(f"Too many Anylogic sims found: {scripts}")
+        elif len(scripts) < 1:
+            raise RuntimeError("No Anylogic sim found.")
+        sim_exec = scripts.pop()
+
+        os.environ["BAOBAB_NAMESPACE"] = str(self.env_id)
+
+        # Launch Baobab
+        subprocess.Popen(
+            [
+                "gunicorn",
+                "--worker-class",
+                "uvicorn.workers.UvicornWorker",
+                "--bind",
+                f"{self.base_host}:{self.base_port}",
+                "platotk.baobab:app",
+            ]
+        )
+        time.sleep(2)
+
+        # Launch the sim that will connect to Baobab
+        penv = {
+            "SIM_API_HOST": self.base_url,
+            "SIM_CONTEXT": "{}",
+            "SIM_WORKSPACE": "dummy",
+            "SIM_ACCESS_KEY": "dummy",
+        }
+        subprocess.Popen([sim_exec], env=penv)
+        time.sleep(5)
 
     def reset(self, *, seed=None, options=None):
         log.debug("Reset send.")
