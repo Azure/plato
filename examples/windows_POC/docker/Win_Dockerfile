@@ -1,0 +1,15 @@
+
+FROM mcr.microsoft.com/windows/servercore:ltsc2019
+
+
+# https://github.com/docker-library/python/pull/557
+ENV PYTHONIOENCODING UTF-8
+
+ENV PYTHON_VERSION 3.12.0b4
+
+
+WORKDIR /opt/src
+COPY requirements.txt /opt/src
+ADD requirements.txt /src/requirements.txt
+
+CMD "python main.py"
