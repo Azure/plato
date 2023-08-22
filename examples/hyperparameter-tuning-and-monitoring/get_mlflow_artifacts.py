@@ -28,7 +28,7 @@ def list_experiments(path: Optional[str] = None) -> List:
     ).mlflow_tracking_uri
     mlflow.set_tracking_uri(mlflow_tracking_uri)
 
-    experiments = mlflow.list_experiments()
+    experiments = mlflow.search_experiments()
 
     return experiments
 
