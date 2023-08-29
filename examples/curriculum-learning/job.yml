@@ -1,0 +1,16 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+code: src
+command: >-
+  python main.py
+
+environment: azureml:curriculum-learning-env@latest
+compute: azureml:env-medium
+display_name: curriculum-learning
+experiment_name: curriculum-learning
+description: Run curriculum learning and log metrics.
+# Needed for using ray on AML
+distribution:
+  type: mpi
+# Modify the following and num_rollout_workers in main to use more workers
+resources:
+  instance_count: 1
