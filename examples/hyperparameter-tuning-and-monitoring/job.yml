@@ -1,7 +1,7 @@
 $schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
 code: src
 command: >-
-  python mlflow_run.py --num-tune-samples 100
+  python mlflow_run.py --num-tune-samples 20 --scheduler asha
 # your enviornment name should include the `azureml` prefix and the `@<version-name>` suffix
 environment: azureml:ray-mlflow-env@latest
 # your compute name should have `azureml:` prefix
@@ -14,4 +14,4 @@ distribution:
    type: mpi
 # Modify the following and num_rollout_workers in main to use more workers
 resources:
-  instance_count: 10
+  instance_count: 5

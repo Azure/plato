@@ -57,7 +57,9 @@ To do this:
 docker build -t anylogic-sim .
 ```
 
-2. Go back to the ``getting-started-anylogic-sim`` folder and run:
+2. In ``src/start.sh`` append ``--test-local`` to ``python -u main.py``
+
+3. Go back to the ``getting-started-anylogic-sim`` folder and run:
   ```bash
   docker run --rm -it -e LOG_LEVEL=debug -v $(pwd)/src:/opt/src anylogic-sim bash /opt/src/start.sh
   ```
@@ -81,16 +83,19 @@ train an RL agent on AML:
    and ``compute`` to be the same as those you created in the prerequisites
    section.
 
-2. Launch the job using the Azure CLI:
+2. Remember to remove ``--test-local`` from ``start.sh`` if you tested the
+   sample locally
+
+3. Launch the job using the Azure CLI:
 ```
 az ml job create -f job.yml --workspace-name $YOUR_WORKSPACE --resource-group $YOUR_RESOURCE_GROUP
 ```
 
-3. Check that it is running by finding the job you launched in [AML
+4. Check that it is running by finding the job you launched in [AML
    studio](https://ml.azure.com/). You should see that ``ray`` is writing
    logs in the *Outputs + logs* tab in the ``user_logs`` folder.
 
-4. Once the job is completed, the model checkpoints can also be found in AML
+5. Once the job is completed, the model checkpoints can also be found in AML
    studio under the *Outputs + Logs* tab of your job
    in the ``outputs`` folder.
 

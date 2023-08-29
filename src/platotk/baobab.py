@@ -9,6 +9,7 @@ To test the API locally, first install ``platotk`` and then run
 
 """
 import asyncio
+import os
 import uuid
 
 from aiocache import Cache
@@ -16,8 +17,11 @@ from fastapi import FastAPI, Request
 
 from platotk.logger import log
 
+namespace = os.getenv("BAOBAB_NAMESPACE", "example")
+
+log.info("BAOBAB namespace: %s", namespace)
 app = FastAPI()
-cache = Cache(Cache.MEMCACHED, endpoint="localhost", port=11211, namespace="main")
+cache = Cache(Cache.MEMCACHED, endpoint="localhost", port=11211, namespace=namespace)
 
 
 class SimState:

@@ -33,7 +33,7 @@ az ml environment create --name ray-mlflow-env --conda-file conda.yml --image mc
 Note that the environment in this sample is slightly different than the _Getting Started on AML_ sample, so you will need to create a new environment.
 
 ## What is being "simulated"?
-This example uses the classic ["CartPole-v1"](https://gymnasium.farama.org/environments/classic_control/cart_pole/) simulation environment. The example runs Ray Tune's [population based training (PBT)](https://docs.ray.io/en/latest/_modules/ray/tune/schedulers/pbt.html) to simultaneously train and optimize a group of agents - regularly testing the agents, replicating the top performers, and perturbing their hyperparameters. The MLflow integration allows logging of all artifacts produced by Ray Tune, such as the model checkpoints, to MLflow.
+This example uses the classic ["CartPole-v1"](https://gymnasium.farama.org/environments/classic_control/cart_pole/) simulation environment. The example uses Ray Tune to conduct hyperparameter search and uses MLflow for logging all the artifacts produced by Ray Tune, such as the model checkpoints, to MLflow.
 
 A user guide providing more details on hyperparameter tuning with PBT is available in [user_guides/hyperparameter-tuning.md](../../docs/user_guides/hyperparameter-tuning.md).
 
