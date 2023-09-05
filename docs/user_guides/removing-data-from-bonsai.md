@@ -130,8 +130,9 @@ If your training graph is complex, we recommend you take a screenshot of your co
 
 ## Reward Training Graph
 
-The reward training graph can be accessed directly from the brain version. First, click on the Train tab, for the brain version of interest. Then, if using Goals, right-click on the legend on the upper-right corner of the graph. In the menu, select "Show Rewards" to plot the evolution of rewards throughout the training session. Take a screenshot of that graph, and save the image along with your Bonsai Report and/or Exported Brain docker file.
+The reward training graph can be accessed directly from the brain version. First, click on the Train tab, for the brain version of interest. Then, if using Goals, right-click on the legend on the upper-right corner of the graph. In the menu, select "Show Rewards" to plot the evolution of rewards throughout the training session. Take a screenshot of that graph, and save the image along with your Bonsai Report and/or Exported Brain docker image.
 
+![reward-training-graph](images/reward-training-graph.png)
 
 ## Simulator Information
 
