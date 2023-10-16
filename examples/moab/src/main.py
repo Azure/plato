@@ -42,7 +42,7 @@ def train(local=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--test-local", action="store_true", default=True)
+    parser.add_argument("--test-local", action="store_true", default=False)
     args = parser.parse_args()
 
     if args.test_local:

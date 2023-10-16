@@ -1,62 +1,83 @@
 """
 Simulator for the Moab plate+ball balancing device.
 """
-__author__ = "Mike Estee"
-__copyright__ = "Copyright 2021, Microsoft Corp."
-
-# We need to disable a check because the typeshed stubs for jinja are incomplete.
-# pyright: strict, reportUnknownMemberType=false
-
-import logging
 
 import numpy as np
-from gymnasium import Env
-from gymnasium.spaces import Box, Dict
+from gymnasium import Env, spaces
 from model import MoabModel, clamp
 from pyrr import matrix33, vector
 
-from platotk.serialize import check_and_transform
 
-# from bonsai_common import SimulatorSession, Schema
-# from microsoft_bonsai_api.simulator.generated.models import SimulatorInterface
-# from microsoft_bonsai_api.simulator.client import BonsaiClientConfig
+def check_and_transform(observation_space, state):
+    """
+    Check and transform a observation state instance for a given observation space.
 
-log = logging.getLogger(__name__)
+    This function takes a state instance and an observation space object that defines
+    the valid shape and dtype of the state data for the simulation environment, then
+    checks if the state instance is already valid for the observation space, and if
+    not, it tries to transform it into a valid form.
+
+    Args:
+        observation_space (gym.Space): The observation space of the sim env.
+        state (JSON): The state instance to check and transform.
+
+    Returns:
+        state: The transformed state instance that is valid for the observation space.
+
+    Raises:
+        ValueError: If the state instance cannot be transformed for the observation
+        space.
+    """
+    # Check if the instance is valid for the space
+    if isinstance(state, np.ndarray) and observation_space.contains(state):
+        # Return the instance as it is
+        return state
+    # Try to transform the instance based on the space type
+    elif isinstance(observation_space, spaces.Box):
+        # Convert the instance to a numpy array with the same
+        # shape and dtype as the space
+        return np.array(state, dtype=observation_space.dtype).reshape(
+            observation_space.shape
+        )
+    elif isinstance(observation_space, spaces.Discrete):
+        # Convert the instance to an integer
+        return int(state)
+    elif isinstance(observation_space, spaces.Dict):
+        # Convert the instance to a dictionary with valid values for each
+        # key in the space
+        return {
+            key: check_and_transform(observation_space.spaces[key], state[key])
+            for key in observation_space.spaces
+        }
+    # Add more cases for other types of spaces as needed
+    else:
+        # Raise an exception if the instance cannot be transformed
+        raise ValueError(f"Cannot transform {state} for {observation_space}")
 
 
 class MoabSim(Env):
     def __init__(self, env_config):
         """Define the observation and action spaces."""
-        self.observation_space = Dict(
-            {
-                # Ball X,Y position
-                "ball_x": Box(low=-float("inf"), high=float("inf")),
-                "ball_y": Box(low=-float("inf"), high=float("inf")),
-                # Ball X,Y velocity
-                "ball_vel_x": Box(low=-6.0, high=6.0),
-                "ball_vel_y": Box(low=-6.0, high=6.0),
-            }
-        )
-        self.action_space = Dict(
-            {
-                # Range -1 to 1 is a scaled value that represents
-                # the full plate rotation range supported by the hardware.
-                "input_pitch": Box(low=-1.0, high=1.0),  # rotate about x-axis
-                "input_roll": Box(low=-1.0, high=1.0),  # rotate about y-axis
-            }
-        )
+        self.observation_space = spaces.Box(
+            low=-float("inf"), high=float("inf"), shape=(4,)
+        )  # (ball_x, ball_y, ball_vel_x, ball_vel_y)
+        self.action_space = spaces.Box(
+            low=-1.0, high=1.0, shape=(4,)
+        )  # (input_pitch, input_roll))
+
+        # initialize the model
         self.model = MoabModel()
         self.reset()
 
     def _get_obs(self):
         """Get the observable state."""
         full_state = self.model.state()
-        observable_state = {
-            "ball_x": full_state["ball_x"],
-            "ball_y": full_state["ball_y"],
-            "ball_vel_x": full_state["ball_vel_x"],
-            "ball_vel_y": full_state["ball_vel_y"],
-        }
+        observable_state = [
+            full_state["ball_x"],
+            full_state["ball_y"],
+            full_state["ball_vel_x"],
+            full_state["ball_vel_y"],
+        ]
         return check_and_transform(self.observation_space, observable_state)
 
     def _get_info(self):
@@ -114,8 +135,8 @@ class MoabSim(Env):
 
     def step(self, action):
         # use new syntax or fall back to old parameter names
-        self.model.roll = action["input_roll"]
-        self.model.pitch = action["input_pitch"]
+        self.model.roll = action[0]  # input_roll
+        self.model.pitch = action[1]  # input_pitch
 
         # clamp inputs to legal ranges
         self.model.roll = clamp(self.model.roll, -1.0, 1.0)
@@ -138,6 +159,8 @@ class MoabSim(Env):
         )
 
     def reward(self, state):
-        distance_from_origin = np.sqrt(state["ball_x"] ** 2 + state["ball_y"] ** 2)
+        distance_from_origin = np.sqrt(
+            state[0] ** 2 + state[1] ** 2
+        )  # np.sqrt(<ball_x> ** 2 + <ball_y> ** 2)
         max_distance = self.model.plate_radius
         return float(1 - distance_from_origin / max_distance)
