@@ -62,7 +62,7 @@ class MoabSim(Env):
             low=-float("inf"), high=float("inf"), shape=(4,)
         )  # (ball_x, ball_y, ball_vel_x, ball_vel_y)
         self.action_space = spaces.Box(
-            low=-1.0, high=1.0, shape=(4,)
+            low=-1.0, high=1.0, shape=(2,)
         )  # (input_pitch, input_roll))
 
         # initialize the model
