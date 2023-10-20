@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" /><link rel="canonical" href="http://127.0.0.1:8000/" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>PlatoTK</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Home";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = "/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> PlatoTK
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#create-azure-resources">Create Azure Resources</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#selecting-a-compute-cluster-size">Selecting a Compute Cluster Size</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#aml-environment-setup">AML Environment Setup</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#custom-simulation-environment-with-gymnasium">Custom Simulation Environment with Gymnasium</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">User Guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="user_guides/hyperparameter-tuning/">Hyperparameter Tuning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="user_guides/monitoring-mlflow/">Monitoring and Logging with MLFlow</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="glossary/">Glossary</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">PlatoTK</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Home</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="plato-toolkit-documentation">Plato Toolkit documentation</h1>
+<p>Learn how to train and deploy RL agents at scale with Ray RLlib and Azure Machine Learning (AML).</p>
+<h2 id="overview">Overview</h2>
+<ul>
+<li>Prerequisites<ul>
+<li><a href="#create-azure-resources">Create Azure Resources</a></li>
+<li><a href="#aml-environment-setup">AML Environment Setup</a></li>
+<li><a href="#custom-simulation-environment-with-gymnasium">Custom Simulation Environment</a></li>
+</ul>
+</li>
+<li>Samples<ul>
+<li><a href="https://github.com/Azure/plato/tree/main/examples/getting-started-on-aml">Simple Adder</a>:  A minimal working example of a Python simulator that can be connected to RLlib and used to train an agent on AML. You can think of it as a "Hello World" sample.</li>
+</ul>
+</li>
+<li>User Guides</li>
+</ul>
+<h2 id="create-azure-resources">Create Azure Resources</h2>
+<p>To use this toolkit, you'll need the following:</p>
+<ul>
+<li><a href="https://portal.azure.com/">An Azure subscription and a resource group</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/machine-learning/quickstart-create-resources#create-the-workspace">An AML workspace</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/machine-learning/quickstart-create-resources#create-compute-clusters">An AML compute cluster</a></li>
+</ul>
+<p>You can also create these using the <a href="https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-workspace?tabs=python">AML Python SDK</a>.</p>
+<h3 id="selecting-a-compute-cluster-size">Selecting a Compute Cluster Size</h3>
+<p>There is no definitive answer to how to select a compute cluster size for RL, as it depends on many factors (e.g., your project budget, simulation environment, and model architecture). However, some general guidelines are:</p>
+<ul>
+<li>Unless you have a compute intensive RL model (e.g., a large deep residual network), we recommend selecting a general purpose CPU VM.</li>
+<li>Choose a <em>minimum</em> number of nodes that defines how many nodes are always running and ready for your jobs.<blockquote>
+<p>We recommend selecting 0 as your minimum  to de-allocate the nodes when they aren't in use. Any value larger than 0 will keep that number of nodes running and incur cost.</p>
+</blockquote>
+</li>
+<li>Choose a <em>maximum</em> number of nodes that defines how many nodes can be added to scale up your training when needed.</li>
+<li>Avoid large unexpected Azure costs by familiarizing yourself with the <a href="https://azure.microsoft.com/en-us/pricing/details/virtual-machines/series/">size and cost of Azure VMs</a>.</li>
+<li>If you are still unsure which VM to select, a cluster with 6 CPU cores and 64GB RAM should be a good starting point for most RL workloads using a Python simulation environment. You can also <a href="https://learn.microsoft.com/en-us/azure/machine-learning/how-to-track-monitor-analyze-runs?view=azureml-api-2#monitor-your-job-resources-preview">monitor your job's resource utilization in AML studio</a> during experiment runs and adjust your VM size accordingly.</li>
+</ul>
+<p>Once you have an AML workspace that contains a compute cluster ready to go, the next step is to <a href="#environment-setup">set up an AML environment</a> to add your Python package dependencies.</p>
+<h2 id="aml-environment-setup">AML Environment Setup</h2>
+<p>A user-managed AML environment specifies the Python packages required to run your simulation and Ray RLlib code. You can follow the <a href="https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-environment">how-to guide on configuring AML environments</a> or try our preferred method below using a conda file.</p>
+<p>We've provided a <code>conda.yml</code> file and Azure CLI command that you can use to create an environment for the <a href="https://github.com/Azure/plato/tree/main/examples/getting-started-on-aml">Simple Adder sample</a> within this toolkit. Simply save the file and run the CLI command from the same location. For more detailed instructions, you can follow the guide to <a href="https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-environments-in-studio">create an environment from a conda file in AML studio</a> or with the <a href="https://learn.microsoft.com/en-us/cli/azure/ml/environment?view=azure-cli-latest#az-ml-environment-create">AML Python SDK</a>.</p>
+<pre><code class="language-yaml"># conda.yml
+channels:
+- anaconda
+- conda-forge
+dependencies:
+- python=3.8.5
+- pip=22.3.1
+- pip:
+   # Dependencies for Ray on AML
+   - azureml-mlflow
+   - azureml-defaults
+   - ray-on-aml
+   - ray[data]==2.3.0
+   - ray[rllib]==2.3.0
+   # Dependencies for RLlib
+   - tensorflow==2.11.1
+   # Dependencies for the Simulator
+   - gymnasium
+   - numpy==1.24.2
+</code></pre>
+<p>Azure CLI command:
+<code>Azure CLI
+az ml environment create --name aml-environment --conda-file conda.yml --image mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04 --resource-group $YOUR_RESOURCE_GROUP --workspace-name $YOUR_WORKSPACE</code></p>
+<h2 id="custom-simulation-environment-with-gymnasium">Custom Simulation Environment with Gymnasium</h2>
+<p>Before you can train an RL agent on AML, your simulation environment needs to be compatible with Ray RLlib. For Python simulation environments, we recommend modifying your code to create a custom Gymnasium environment by following <a href="https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/">this tutorial</a> and using the samples in this repository for reference. The basic steps are:</p>
+<ul>
+<li>Implement the <a href="https://gymnasium.farama.org/api/env"><code>gymnasium.Env</code></a> interface and define methods for <em>reset()</em> and <em>step()</em>.</li>
+<li>Specify the <em>action_space</em> and <em>observation_space</em> attributes during initialization using <a href="https://gymnasium.farama.org/api/spaces/fundamental/#fundamental-spaces"><code>gymnasium.spaces</code></a>.</li>
+<li>Ensure that the actions and observations returned by <em>reset()</em> and <em>step()</em> have the same shape and dtype as the <em>action_space</em> and <em>observation_space</em> defined.<ul>
+<li>For example, if your observation_space is a <code>gymnasium.spaces.Box</code> space with shape=(1,) and dtype=np.float32, you should make sure that your observation is a numpy array of shape (1,) and dtype np.float32.</li>
+</ul>
+</li>
+</ul>
+<p>After you complete the integration, we suggest that you confirm it can run on your local machine before scaling on AML. Our <a href="https://github.com/Azure/plato/tree/main/examples/getting-started-on-aml">Simple Adder sample</a> provides you with the code to run it both locally and on AML.</p>
+<!-- ## Commands
+
+* `mkdocs new [dir-name]` - Create a new project.
+* `mkdocs serve` - Start the live-reloading docs server.
+* `mkdocs build` - Build the documentation site.
+* `mkdocs -h` - Print help message and exit.
+
+## Project layout
+
+    mkdocs.yml    # The configuration file.
+    docs/
+        index.md  # The documentation homepage.
+        ...       # Other markdown pages, images and other files. -->
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="user_guides/hyperparameter-tuning/" class="btn btn-neutral float-right" title="Hyperparameter Tuning">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+      <span><a href="user_guides/hyperparameter-tuning/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="javascripts/mathjax.js"></script>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.5.3
+Build Date UTC : 2023-10-20 19:45:50.809750+00:00
+-->

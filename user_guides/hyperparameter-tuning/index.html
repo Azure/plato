@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://127.0.0.1:8000/user_guides/hyperparameter-tuning/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Hyperparameter Tuning - PlatoTK</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Hyperparameter Tuning";
+        var mkdocs_page_input_path = "user_guides/hyperparameter-tuning.md";
+        var mkdocs_page_url = "/user_guides/hyperparameter-tuning/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> PlatoTK
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">User Guides</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Hyperparameter Tuning</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#why-population-based-training">Why Population Based Training?</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-to-select-hyperparameter-mutations-space">How to Select Hyperparameter Mutations Space?</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-to-select-the-stopping-criteria">How to Select the Stopping Criteria?</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#instantiating-the-tuner">Instantiating the Tuner</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#param-space-vs-hyperparameter-mutations">Param Space vs Hyperparameter Mutations</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#selecting-the-number-of-cpus-and-workers-for-tuning">Selecting the Number of CPUs and Workers for Tuning</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#further-resources">Further Resources</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../monitoring-mlflow/">Monitoring and Logging with MLFlow</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../glossary/">Glossary</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">PlatoTK</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">User Guides</li>
+      <li class="breadcrumb-item active">Hyperparameter Tuning</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="hyperparameter-tuning-with-ray-tune">Hyperparameter Tuning with Ray Tune</h1>
+<h2 id="overview">Overview</h2>
+<p>Reinforcement learning algorithms are notoriously tricky to optimize and train efficiently. Hyperparameter tuning with an efficient scheduler can often help you find a better performing agent in less time than a manual search.</p>
+<p>The example  in <code>examples/hyperparameter-tuning-and-monitoring</code> demonstrates an example of how to use <a href="https://docs.ray.io/en/releases-2.3.0/tune/examples/pbt_guide.html">Population Based Training (PBT)</a> algorithm to tune hyperparameters using Ray Tune library with MLflow on AzureML or locally. There are a few design decisions you as a user will be able to make when using this example, and this user guide will help you understand how to make those decisions.</p>
+<h2 id="why-population-based-training">Why Population Based Training?</h2>
+<p>Ray Tune provides a number of schedulers that can be used to tune hyperparameters for reinforcement learning algorithms. The scheduler we use in this sample, the Population Based Training (PBT) algorithm, is one of the most popular schedulers for reinforcement learning algorithms.</p>
+<p>While there are other <a href="https://docs.ray.io/en/releases-2.3.0/tune/api/schedulers.html">schedulers</a> in Ray that you can leverage for hyperparameter search, we recommend PBT for a few reasons:</p>
+<ol>
+<li><strong>Efficient Exploration</strong>: PBT is based on the idea of iteratively exploring and exploiting the hyperparameter search space. This approach enables PBT to quickly explore a wide range of hyperparameters and identify promising ones for further optimization. As a result, PBT can often converge to good hyperparameter settings faster than other methods.</li>
+<li><strong>Dynamic Adaptation</strong>: PBT can adapt hyperparameters dynamically during the training process. This means that PBT can change the hyperparameters as the training progresses and adapt to changing conditions. For example, if a particular set of hyperparameters is performing well, PBT can allocate more resources to it, while reducing the resources allocated to poorly performing hyperparameters.</li>
+<li><strong>Resource Efficiency</strong>: PBT is resource-efficient because it optimizes hyperparameters in a distributed manner. Instead of training a single model with a fixed set of hyperparameters, PBT trains a population of models with different hyperparameters concurrently. This approach makes PBT more efficient because it can explore the search space faster and avoid getting stuck in local minima.</li>
+</ol>
+<p>A good overview of population based training is available <a href="https://docs.ray.io/en/releases-2.3.0/tune/examples/pbt_guide.html">here</a>.</p>
+<h2 id="how-to-select-hyperparameter-mutations-space">How to Select Hyperparameter Mutations Space?</h2>
+<p>The first design decision you will need to make is the <code>hyperparameter_mutations</code> dictionary. This dictionary specifies the mutations of the hyperparameters to be tuned by the PBT algorithm. The mutations are specified as a function of the search space for each hyperparameter. For example, the following code snippet shows the default hyperparameter mutations for the PPO algorithm in our sample:</p>
+<pre><code class="language-python">hyperparam_mutations = {
+    &quot;lambda&quot;: lambda: random.uniform(0.9, 1.0),
+    &quot;clip_param&quot;: lambda: random.uniform(0.01, 0.5),
+    &quot;lr&quot;: [1e-3, 5e-4, 1e-4, 5e-5, 1e-5],
+    &quot;num_sgd_iter&quot;: lambda: random.randint(1, 30),
+    &quot;sgd_minibatch_size&quot;: lambda: random.randint(128, 16384),
+    &quot;train_batch_size&quot;: lambda: random.randint(2000, 160000),
+}
+</code></pre>
+<p>Here <code>hyperparam_mutations</code>  is a dictionary where key/value pair specifies a resampling function for each hyperparameter, or a range of values to sample from. For example, the <code>lambda</code> hyperparameter is resampled from a uniform distribution between 0.9 and 1.0 whereas the <code>lr</code> hyperparameter is resampled from a list of allowed values.</p>
+<p>This dictionary is then passed to the <code>PopulationBasedTraining</code> scheduler as follows:</p>
+<pre><code class="language-python">pbt = PopulationBasedTraining(
+    time_attr=&quot;time_total_s&quot;,
+    perturbation_interval=120,
+    resample_probability=0.25,
+    hyperparam_mutations=hyperparam_mutations,
+    custom_explore_fn=explore,
+)
+</code></pre>
+<p>where we additionally specify the attribute to use for time tracking and comparison (<code>time_attr</code>), the frequency (as a multiple of <code>time_attr</code>, so 120 seconds in this example) at which to continue the trial (exploit) or perturb (explore) the hyperparameters (<code>perturbation_interval</code>), the probability of resampling a hyperparameter (vs mutating) from their resampling distribution (<code>resample_probability</code>), and a custom function to explore the hyperparameter space (<code>custom_explore_fn</code>), which in our example is set to simply ensure that sufficient environment samples have been collected for a training iteration.</p>
+<h2 id="how-to-select-the-stopping-criteria">How to Select the Stopping Criteria?</h2>
+<p>The next design decision you will need to make is the when to stop your experiment, which is specified through the <code>stopping_criteria</code> dictionary. This dictionary specifies the stopping criteria for the PBT algorithm. The stopping criteria are specified as a function of the training iteration and the mean episode reward of the model. For example, the following code snippet shows the default stopping criteria for the PPO algorithm in our sample:</p>
+<pre><code class="language-python">stopping_criteria = {&quot;training_iteration&quot;: 100, &quot;episode_reward_mean&quot;: 300}
+</code></pre>
+<p>which specifies that the algorithm should stop when either the number of training iterations reaches 100 or the mean episode reward (summed over episodes and averaged over a training batch, i.e., <span class="arithmatex">\(\frac{1}{N} \sum_{j=1}^{N}\sum_{i=1}^T r_{i,j}\)</span>, where there are <span class="arithmatex">\(N\)</span> episodes in the training batch and <span class="arithmatex">\(T\)</span> iterations in each episode) reaches 300. You should set this based on what your desired average reward is (and be aware of the episode horizon) and how long you want to train for. Note that both of these are in terms of training iterations (where each training iteration is one SGD update), which would include a different number of environment steps because we are modifying the <code>sgd_minibatch_size</code> in our hyperparameters.</p>
+<p>Further guidance on defining stopping criteria for Tune expeirments is available in the <a href="https://docs.ray.io/en/latest/tune/tutorials/tune-stopping.html">Ray docs</a>.</p>
+<h2 id="instantiating-the-tuner">Instantiating the Tuner</h2>
+<p>The <code>Tuner</code> object is created using the Tuner class from Ray Tune. The <code>TuneConfig</code> parameter of the Tuner constructor specifies the tuning configuration, including the metric used for evaluation, the mode of optimization (maximization or minimization), the scheduler object that specifies the PBT algorithm and the number of samples to be evaluated by the PBT algorithm. This is finally fed into the <code>Tuner</code> itself, along with the algorithm to be tuned, the initial configuration of the algorithm, and the number of workers to use for sampling:</p>
+<pre><code class="language-python">tuner = tune.Tuner(
+    # the algorithm/trainable to be tuned
+    &quot;PPO&quot;,
+    tune_config=tune.TuneConfig(
+        metric=&quot;episode_reward_mean&quot;,
+        mode=&quot;max&quot;,
+        scheduler=pbt,
+        # the number of hyperparameters to sample
+        num_samples=num_tune_samples,
+    ),
+    # specify the initial config input into the trainer
+    # these are the initial samples used, which are then mutated by
+    # the population based training algorithm if they are specified in
+    # `hyperparam_mutations`.
+    # the `num_workers` specifies the number of sample collection workers
+    # that are used for gathering samples
+    # the `num_cpus` specifies the number of CPUs for each training trial
+    # here `num_workers=4` and `num_cpus=1` means we will use 5 cpus
+    # if you want to run these trials concurrently, then you will need
+    # CLUSTER_CPUS &gt;= 5 x num_tune_samples
+    # otherwise the PBT scheduler will round-robin between training each trial
+    param_space={
+        &quot;env&quot;: env_name,
+        &quot;kl_coeff&quot;: 1.0,
+        &quot;num_workers&quot;: 4,
+        &quot;num_cpus&quot;: 1,  # number of CPUs to use per trial
+        &quot;num_gpus&quot;: 0,  # number of GPUs to use per trial
+        # For DiagGaussian action distributions, make the second half of the model
+        # outputs floating bias variables instead of state-dependent. This only
+        # has an effect is using the default fully connected net.
+        # avoid this for non-continuous action spaces
+        &quot;model&quot;: {&quot;free_log_std&quot;: True},
+        # These params are tuned from a fixed starting value.
+        &quot;lambda&quot;: 0.95,
+        &quot;clip_param&quot;: 0.2,
+        &quot;lr&quot;: 1e-4,
+        # These params start off randomly drawn from a set.
+        &quot;num_sgd_iter&quot;: tune.choice([10, 20, 30]),
+        &quot;sgd_minibatch_size&quot;: tune.choice([128, 512, 2048]),
+        &quot;train_batch_size&quot;: tune.choice([10000, 20000, 40000]),
+    },
+    # MLFlow callback uses parent_run_id and tracks all hyperparameter
+    # runs as child jobs
+    run_config=air.RunConfig(
+        stop=stopping_criteria,
+        callbacks=[
+            MLflowLoggerCallback(
+                tags={MLFLOW_PARENT_RUN_ID: current_run.info.run_id},
+                experiment_name=&quot;pbt_ppo&quot;,
+                save_artifact=True,
+            )
+        ],
+    ),
+)
+</code></pre>
+<p>Here we are passing the algorithm we want to tune (PPO), the tuning configuration, the initial configuration of the algorithm, and the number of workers to use for sampling.</p>
+<h3 id="param-space-vs-hyperparameter-mutations">Param Space vs Hyperparameter Mutations</h3>
+<p>In the above <code>Tuner</code> call, we pass the <code>param_space</code> dictionary, which specifies the initial configuration of the algorithm. This is the configuration that is used to initialize the algorithm and is then mutated by the PBT algorithm. If the parameters were ommitted from <code>param_space</code> but were provided in <code>hyperparam_mutations</code>, then the initial values would be also sampled from <code>hyperparam_mutations</code>. The hyperparameters that are specified in the <code>param_space</code> dictionary are not mutated by the PBT algorithm unless they are also in <code>hyperparam_mutations</code>. For example, in the above code snippet, the <code>num_workers</code> hyperparameter is specified in the <code>param_space</code> dictionary but not in <code>hyperparam_mutations</code>, and is therefore not mutated by the PBT algorithm. Conversely, the <code>num_sgd_iter</code> hyperparameter is specified in the <code>hyperparam_mutations</code> dictionary and is mutated by the PBT algorithm.</p>
+<h3 id="selecting-the-number-of-cpus-and-workers-for-tuning">Selecting the Number of CPUs and Workers for Tuning</h3>
+<p>Since PBT can train multiple trials concurrently, you can speed up the trial runtime by leveraging available CPUs to parallelize training. To do so effectively, you will need to specify the number of CPUs and workers to use for tuning. The <code>num_cpus</code> parameter specifies the number of CPUs to use for each trial, and the <code>num_workers</code> parameter specifies the number of workers to use for sampling from your simulation environments. In the above code snippet, we are using 4 workers and 1 CPU per trial, so we will need 5 CPUs to run <em>each</em> trial. If you do not have enough CPUs to run all the trials concurrently (i.e., <code>5 * num_tune_samples</code>), then the PBT scheduler will round-robin between training each subsequent trial. For example, if you only have 10 CPUs (as we have requested in our AML <code>job.yml</code> for this experiment), then the PBT scheduler will train 2 trials concurrently, and then train the remaining trials sequentially as resources become available.</p>
+<h2 id="further-resources">Further Resources</h2>
+<ul>
+<li><a href="https://docs.ray.io/en/latest/tune/examples/pbt_ppo_example.html">Using RLlib with Tune</a></li>
+<li><a href="https://docs.ray.io/en/latest/tune/examples/pbt_visualization/pbt_visualization.html">Visualizing PBT</a></li>
+<li><a href="https://docs.ray.io/en/latest/tune/tutorials/tune-resources.html">Guide to Parallelism and Resources for Ray Tune</a></li>
+<li><a href="https://docs.ray.io/en/releases-2.3.0/tune/examples/pbt_guide.html">A Guide to PBT with Tune</a></li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../.." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../monitoring-mlflow/" class="btn btn-neutral float-right" title="Monitoring and Logging with MLFlow">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../.." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../monitoring-mlflow/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../javascripts/mathjax.js"></script>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

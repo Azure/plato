@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://127.0.0.1:8000/user_guides/monitoring-mlflow/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Monitoring and Logging with MLFlow - PlatoTK</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Monitoring and Logging with MLFlow";
+        var mkdocs_page_input_path = "user_guides/monitoring-mlflow.md";
+        var mkdocs_page_url = "/user_guides/monitoring-mlflow/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> PlatoTK
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">User Guides</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../hyperparameter-tuning/">Hyperparameter Tuning</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Monitoring and Logging with MLFlow</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-logging-is-setup-in-the-sample">How Logging is Setup in the Sample</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#viewing-local-runs-using-the-mlflow-ui">Viewing Local Runs using the MLFlow UI</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#viewing-remote-runs-on-azureml">Viewing Remote Runs on AzureML</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#viewing-job-runs-and-filtering-your-experiment">Viewing Job Runs and Filtering Your Experiment</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#adding-custom-charts">Adding Custom Charts</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#downloading-checkpoints-from-aml-registry">Downloading Checkpoints From AML Registry</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../glossary/">Glossary</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">PlatoTK</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">User Guides</li>
+      <li class="breadcrumb-item active">Monitoring and Logging with MLFlow</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="logging-metrics-and-monitoring-experiments-with-mlflow">Logging Metrics and Monitoring Experiments with MLFlow</h1>
+<h2 id="overview">Overview</h2>
+<p>The Plato toolkit integrates with MLFlow for monitoring experiments, saving model checkpoints, and logging metrics. This integration allows you to view your model's training progress over time, view and download snapshots of your model over time, and compare multiple runs together.</p>
+<p>This sample <code>examples/hyperparameter-tuning-and-monitoring</code> shows how to use the MLFlow integration with Plato. This example uses the <code>MLflowLoggerCallback</code> from Ray Tune to log the results to MLflow. The MLflow integration allows you to log all the artifacts produced by Ray Tune, such as the model checkpoints, to MLflow.</p>
+<p>For more information on available options and customizations, see the <a href="https://docs.ray.io/en/releases-2.3.1/tune/api/doc/ray.air.integrations.mlflow.MLflowLoggerCallback.html#ray.air.integrations.mlflow.MLflowLoggerCallback">documentation</a> for the callback.</p>
+<h2 id="how-logging-is-setup-in-the-sample">How Logging is Setup in the Sample</h2>
+<p>The sample uses <a href="https://docs.ray.io/en/releases-2.3.0/ray-air/api/doc/ray.air.RunConfig.html"><code>ray.air.RunConfig</code></a> for configuring training and tuning runs. This is where we provide the callback for <code>mlflow</code> and ask it to save model checkpoints and metrics.</p>
+<pre><code class="language-python">run_config=air.RunConfig(
+    stop=stopping_criteria,
+    callbacks=[
+        MLflowLoggerCallback(
+            tags={MLFLOW_PARENT_RUN_ID: current_run.info.run_id},
+            experiment_name=&quot;pbt_ppo&quot;,
+            save_artifact=True,
+        )
+    ],
+)
+</code></pre>
+<p>Here we are setting up a tag to ensure all the subsequent sweeping jobs are run under the same parent job, making it easier to view the results on AzureML. Additionally, we ask MLflow to save all the artifacts produced by Ray Tune, which includes the hyperparameter values and model checkpoints.</p>
+<h3 id="viewing-local-runs-using-the-mlflow-ui">Viewing Local Runs using the MLFlow UI</h3>
+<p>If you use the <code>--test-local</code> option when running the sample, your results will be saved locally in a folder called <code>mlruns</code>.</p>
+<pre><code class="language-bash">mlruns
+├── 0
+│   ├── 9fcea3f4faf845a3be62c60bfdd24f30
+│   │   ├── artifacts
+│   │   ├── meta.yaml
+│   │   ├── metrics
+│   │   ├── params
+│   │   └── tags
+│   │       ├── mlflow.source.git.commit
+│   │       ├── mlflow.source.name
+│   │       ├── mlflow.source.type
+│   │       └── mlflow.user
+│   └── meta.yaml
+└── 1
+    ├── c0844d850fef427c8d861ad5f4cd7fdd
+    │   ├── artifacts
+    │   │   ├── checkpoint_000010
+    │   │   │   ├── algorithm_state.pkl
+    │   │   │   ├── policies
+    │   │   │   │   └── default_policy
+    │   │   │   │       ├── policy_state.pkl
+    │   │   │   │       └── rllib_checkpoint.json
+    │   │   │   └── rllib_checkpoint.json
+    │   │   ├── params.json
+    │   │   ├── params.pkl
+    │   │   ├── progress.csv
+    │   │   └── result.json
+    │   ├── meta.yaml
+    │   ├── metrics
+    │   │   ├── agent_timesteps_total
+    │   │   ├── done
+    │   │   ├── episode_len_mean
+    │   │   ├── episode_reward_max
+    │   │   ├── episode_reward_mean
+    │   │   ├── episode_reward_min
+    │   │   ├── episodes_this_iter
+    │   │   ├── episodes_total
+    │   │   ├── iterations_since_restore
+    │   │   ├── num_agent_steps_sampled
+    │   │   ├── num_agent_steps_trained
+    │   │   ├── num_env_steps_sampled
+    │   │   ├── num_env_steps_sampled_this_iter
+    │   │   ├── num_env_steps_trained
+    │   │   ├── num_env_steps_trained_this_iter
+    │   │   ├── num_faulty_episodes
+    │   │   ├── num_healthy_workers
+    │   │   ├── num_in_flight_async_reqs
+    │   │   ├── num_remote_worker_restarts
+    │   │   ├── num_steps_trained_this_iter
+    │   │   ├── pid
+    │   │   ├── time_since_restore
+    │   │   ├── time_this_iter_s
+    │   │   ├── time_total_s
+    │   │   ├── timestamp
+    │   │   ├── timesteps_since_restore
+    │   │   ├── timesteps_total
+    │   │   ├── training_iteration
+    │   │   └── warmup_time
+    │   ├── params
+    │   │   ├── clip_param
+    │   │   ├── env
+    │   │   ├── kl_coeff
+    │   │   ├── lambda
+    │   │   ├── lr
+    │   │   ├── num_cpus
+    │   │   ├── num_gpus
+    │   │   ├── num_sgd_iter
+    │   │   ├── num_workers
+    │   │   ├── sgd_minibatch_size
+    │   │   └── train_batch_size
+    │   └── tags
+    │       ├── mlflow.parentRunId
+    │       ├── mlflow.runName
+    │       └── trial_name
+    └── meta.yaml
+</code></pre>
+<p>You can launch a local UI for mlflow by running</p>
+<pre><code class="language-bash">mlflow ui
+</code></pre>
+<p>from the samples directory. Here you can view model checkpoints and a table summary of all the runs.</p>
+<h3 id="viewing-remote-runs-on-azureml">Viewing Remote Runs on AzureML</h3>
+<p>If you instead ran these experiments on AzureML remotely, you should use the AzureML Studio to view your experiments.</p>
+<h4 id="viewing-job-runs-and-filtering-your-experiment">Viewing Job Runs and Filtering Your Experiment</h4>
+<p>If you navigate to your AML workspace and click on the jobs tab, you should see all the experiments you have run. By default, AML will only show the parent jobs, which does not include the jobs that run the actual hyperparameter sweeps. To view all the jobs, you can click on the "Include child jobs" button at the top of the screen. You can then filter based on time to view the most recent runs, or by experiment name to see the ones relevant to your specific experiment. The charts will also be automatically updated based on your filter.</p>
+<p>Some useful filters you can run:</p>
+<ol>
+<li>Filter on <code>episode_reward_mean</code> to the highest value or above a certain threshold. This can help you identify the models that perform the best.</li>
+<li>Filter on <code>agent_timesteps_total</code> to see the models that have been trained for the longest amount of sample steps.</li>
+<li>Filter on <code>time_total_s</code> to see the models that have been trained for the longest amount of time.</li>
+<li>Filter on job status to see the jobs that have completed successfully, are still running or have failed.</li>
+</ol>
+<h4 id="adding-custom-charts">Adding Custom Charts</h4>
+<p>If you want to change the default charts that are displayed for your experiments in AzureML Studio, you can create a custom chart and save it as the default.</p>
+<p>To do this, you can follow these steps:</p>
+<p>Open your experiment in AzureML Studio.</p>
+<ul>
+<li>Click on the "Charts" tab to view the default charts.</li>
+<li>Create a new chart by clicking on the "New Chart" button.</li>
+<li>Configure the chart to display the metric(s) that you want to be the default, such as <code>episode_reward_mean</code>.</li>
+<li>Once you are satisfied with the chart, click on the "Save as Default" button at the bottom of the screen.</li>
+<li>After you have saved your custom chart as the default, it should be displayed automatically whenever you open your experiment in AzureML Studio.</li>
+<li>Note that this will only affect your own view of the experiment; other users will still see the original default charts unless they also create and save their own custom charts.</li>
+</ul>
+<p><img alt="" src="../static/aml_custom_charts.png" /></p>
+<h3 id="downloading-checkpoints-from-aml-registry">Downloading Checkpoints From AML Registry</h3>
+<p>After you have completed your training jobs, you can download the checkpoints from the AML registry to your local machine. This can be useful if you want to run inference on your model locally or deploy it to a different environment. The script <code>get_mlflow_artifacts.py</code> provides some helper functions for downloading the top-performing checkpoint from your AML experiments to your local machine. Specifically, the following code chunk will download the top checkpoint from the most recent experiment to the <code>model_checkpoints</code> directory. If you want to download from a different experiment, you can change the <code>experiment</code> variable to the name of the experiment you want to download from (you can use something like <code>[a.name for a in experiments]</code> to view each experiment by its name)</p>
+<pre><code class="language-python">from get_mlflow_artifacts import get_top_run, list_experiments
+experiments = list_experiments()
+# pick the experiment you run
+experiment = experiments[-1].name
+local_path = &quot;model_checkpoints&quot;
+get_top_run(experiment, local_path, rank_metric=&quot;metrics.episode_reward_max&quot;)
+</code></pre>
+<p>Note the argument <code>rank_metric</code> for the <code>get_top_run</code> function. This argument specifies which metric to use to rank the checkpoints. By default, it is set to <code>metrics.episode_reward_mean</code>, which will rank the checkpoints by the average episode reward. You can change this to any of the other metrics that are logged by the training script, such as <code>metrics.episode_reward_max</code> or <code>metrics.episode_reward_min</code>. You can also change the <code>local_path</code> argument to specify a different directory to download the checkpoints to.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../hyperparameter-tuning/" class="btn btn-neutral float-left" title="Hyperparameter Tuning"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../glossary/" class="btn btn-neutral float-right" title="Glossary">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../hyperparameter-tuning/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../glossary/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../javascripts/mathjax.js"></script>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
