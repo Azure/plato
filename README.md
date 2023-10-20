@@ -2,7 +2,7 @@
 
 Plato is a Python toolkit that enables users to train reinforcement learning (RL) agents at scale on [Azure Machine Learning (AML)](https://learn.microsoft.com/en-us/azure/machine-learning/) compute clusters using [Ray RLLib](https://docs.ray.io/en/latest/rllib/index.html#). With AML, you can access powerful CPU or GPU enabled virtual machines to scale up your training to meet the computational speed and load requirements of your simulation environment and model architecture.
 
-In addition to RL training and assessment on AML, Plato offers additional features and guidance for domain randomization, hyperparameter tuning via Ray Tune, experiment management with MLflow, and Dockerized deployment of a trained agent.
+In addition to RL training and assessment on AML, Plato offers additional features and guidance for hyperparameter tuning via Ray Tune, experiment management with MLflow, curriculum learning, and Dockerized deployment of a trained agent.
 
 ## Documentation
 * [Glossary](https://azure.github.io/plato/glossary/)
@@ -10,11 +10,17 @@ In addition to RL training and assessment on AML, Plato offers additional featur
     * [Create AML Resources](https://azure.github.io/plato/#create-azure-resources)
     * [AML Environment Setup](https://azure.github.io/plato/#aml-environment-setup)
     * [Custom Simulation Environment](https://azure.github.io/plato/#custom-simulation-environment-with-gymnasium)
-* Examples
-    * [Getting Started on AML](https://github.com/Azure/plato/tree/main/examples/getting-started-on-aml):  A minimal working example of a Python simulation environment that can be connected to RLlib and used to train an agent on AML. You can think of it as a "Hello World" example.
-    * [Hyperparameter Tuning and Monitoring](https://github.com/Azure/plato/tree/main/examples/hyperparameter-tuning-and-monitoring): Learn how to tune, monitor, and download agents on AML.
-    * [Custom Assessments](https://github.com/Azure/plato/tree/main/examples/custom-assessments): Collect logs for custom episode configurations evaluated on a trained agent.
-    * [Deploy Agent](https://github.com/Azure/plato/tree/main/examples/deploy-agent): Serve your agent locally or package and deploy it on Azure.
+* Examples:
+    * Get Started:
+        * [Getting Started on AML](https://github.com/Azure/plato/tree/main/examples/getting-started-on-aml):  A minimal working example of a Python simulation environment that can be connected to RLlib and used to train an agent on AML. You can think of it as a "Hello World" example.
+        * [Getting Started with an Anylogic Sim](https://github.com/Azure/plato/tree/main/examples/getting-started-anylogic-sim): Connect your AnyLogic simulation environment to RLlib using Baobab to run reinforcement learning experiments on AML.
+    * Experiment:
+        * [Hyperparameter Tuning and Monitoring](https://github.com/Azure/plato/tree/main/examples/hyperparameter-tuning-and-monitoring): Learn how to tune, monitor, and download agents on AML.
+        * [Curriculum Learning](https://github.com/Azure/plato/tree/main/examples/curriculum-learning): Explore how to gradually increases the difficulty or complexity of the task(s) that the agent has to solve, which can improve the learning efficiency and generalization.
+        * [Logging Trajectories](https://github.com/Azure/plato/tree/main/examples/logging-trajectories): Find out how to log the trajectories of an agent with callbacks during training and evaluation, and access the logged data in your AML workspace.
+    * Assess and Deploy:
+        * [Custom Assessments](https://github.com/Azure/plato/tree/main/examples/custom-assessments): Collect logs for custom episode configurations evaluated on a trained agent.
+        * [Deploy Agent](https://github.com/Azure/plato/tree/main/examples/deploy-agent): Serve your agent locally or package and deploy it on Azure.
 
 ## Contributing
 
