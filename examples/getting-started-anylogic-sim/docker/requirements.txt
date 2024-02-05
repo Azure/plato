@@ -3,7 +3,7 @@ azure-ai-ml==1.7.2
 azureml-core==1.51.0
 azureml-defaults==1.51.0
 azureml-mlflow==1.51.0
-fastapi==0.95.2
+fastapi==0.109.1
 git+https://github.com/Azure/plato.git@main
 gymnasium==0.26.3
 gunicorn==20.1.0
